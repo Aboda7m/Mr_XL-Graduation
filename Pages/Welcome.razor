@@ -1,8 +1,13 @@
 @page "/welcome/{username}"
-
-<h2>Welcome, @username!</h2>
+@inject Mr_XL_Graduation.Services.UserService UserService // Adjust according to your namespace
+<h2>Welcome, @fullName!</h2>
 
 <p>You have successfully logged in.</p>
+
+<div>
+    <p><strong>Student ID:</strong> @studentId</p>
+    <p><strong>Email:</strong> @email</p>
+</div>
 
 <div class="button-container">
     <button class="btn" @onclick="NavigateToSchedule">Schedule</button>
@@ -16,8 +21,31 @@
     [Parameter]
     public string username { get; set; }
 
+    private string fullName { get; set; }
+    private string studentId { get; set; }
+    private string email { get; set; }
+
     [Inject]
     private NavigationManager NavigationManager { get; set; }
+
+    protected override void OnInitialized()
+    {
+        // Get student info based on the username
+        var studentInfo = UserService.GetStudentInfo(username);
+        if (studentInfo != null)
+        {
+            fullName = studentInfo.FullName;
+            studentId = studentInfo.StudentId;
+            email = studentInfo.Email;
+        }
+        else
+        {
+            // Handle case where student info is not found
+            fullName = "Unknown User";
+            studentId = "N/A";
+            email = "N/A";
+        }
+    }
 
     private void NavigateToSchedule()
     {
