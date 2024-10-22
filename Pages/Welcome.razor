@@ -1,21 +1,115 @@
 @page "/welcome/{username}"
+@inject Mr_XL_Graduation.Services.UserService UserService // Adjust according to your namespace
 
-<h2>Welcome, @username!</h2>
+<div class="container">
+    <h2>Welcome, @fullName!</h2>
 
-<p>You have successfully logged in.</p>
+    <div class="info">
+        <p><strong>Student ID:</strong> @studentId</p>
+        <p><strong>Email:</strong> @email</p>
+    </div>
 
-<button @onclick="LogOut">Logout</button>
+    <div class="button-container">
+        <button class="btn" @onclick="NavigateToSchedule">Schedule</button>
+        <button class="btn" @onclick="NavigateToGrades">Grades</button>
+        <button class="btn" @onclick="NavigateToAttendance">Attendance</button>
+        <button class="btn" @onclick="NavigateToInfo">Student Information</button>
+        <button class="btn" @onclick="LogOut">Logout</button>
+    </div>
+</div>
 
 @code {
     [Parameter]
     public string username { get; set; }
 
+    private string fullName { get; set; }
+    private string studentId { get; set; }
+    private string email { get; set; }
+
     [Inject]
     private NavigationManager NavigationManager { get; set; }
 
-    private void LogOut()
+    protected override void OnInitialized()
     {
-        // Logic to handle logout (e.g., clearing authentication)
-        NavigationManager.NavigateTo("/login");
+        // Get student info based on the username
+        var studentInfo = UserService.GetStudentInfo(username);
+        if (studentInfo != null)
+        {
+            fullName = studentInfo.FullName;
+            studentId = studentInfo.StudentId;
+            email = studentInfo.Email;
+        }
+        else
+        {
+            // Handle case where student info is not found
+            fullName = "Unknown User";
+            studentId = "N/A";
+            email = "N/A";
+        }
     }
+
+    private void NavigateToSchedule() { /* Logic for navigating */ }
+    private void NavigateToGrades() { /* Logic for navigating */ }
+    private void NavigateToAttendance() { /* Logic for navigating */ }
+    private void NavigateToInfo() { /* Logic for navigating */ }
+    private void LogOut() { NavigationManager.NavigateTo("/login"); }
 }
+
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f7f9;
+        color: #333;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        border-radius: 8px;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        color: #6f2c91; /* Purple accent */
+        margin-bottom: 20px;
+    }
+
+    .info {
+        margin-bottom: 30px;
+        border-left: 4px solid #6f2c91; /* Purple accent on the left */
+        padding-left: 15px;
+    }
+
+    .button-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start; /* Align buttons to the start */
+        gap: 15px;
+    }
+
+    .btn {
+        background-color: #6f2c91; /* Purple accent */
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 15px 30px;
+        font-size: 1em;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+        width: 100%; /* Full width */
+    }
+
+        .btn:hover {
+            background-color: #5a2475; /* Darker purple on hover */
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            background-color: #4a1d61; /* Even darker on active */
+            transform: translateY(0);
+        }
+</style>
