@@ -4,7 +4,13 @@
 
 <p>You have successfully logged in.</p>
 
-<button @onclick="LogOut">Logout</button>
+<div class="button-container">
+    <button class="btn" @onclick="NavigateToSchedule">Schedule</button>
+    <button class="btn" @onclick="NavigateToGrades">Grades</button>
+    <button class="btn" @onclick="NavigateToAttendance">Attendance</button>
+    <button class="btn" @onclick="NavigateToInfo">Student Information</button>
+    <button class="btn" @onclick="LogOut">Logout</button>
+</div>
 
 @code {
     [Parameter]
@@ -13,9 +19,82 @@
     [Inject]
     private NavigationManager NavigationManager { get; set; }
 
+    private void NavigateToSchedule()
+    {
+        // Logic for navigating to the schedule page (to be implemented)
+    }
+
+    private void NavigateToGrades()
+    {
+        // Logic for navigating to the grades page (to be implemented)
+    }
+
+    private void NavigateToAttendance()
+    {
+        // Logic for navigating to the attendance page (to be implemented)
+    }
+
+    private void NavigateToInfo()
+    {
+        // Logic for navigating to the student information page (to be implemented)
+    }
+
     private void LogOut()
     {
         // Logic to handle logout (e.g., clearing authentication)
         NavigationManager.NavigateTo("/login");
     }
 }
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f7f9;
+        color: #333;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h2 {
+        text-align: center;
+        color: #4a4a4a;
+        margin-bottom: 20px;
+    }
+
+    p {
+        text-align: center;
+        font-size: 1.2em;
+        margin-bottom: 30px;
+    }
+
+    .button-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .btn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 15px 30px;
+        font-size: 1em;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+        width: 200px;
+        text-align: center;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+    }
+
+    .btn:active {
+        background-color: #004494;
+        transform: translateY(0);
+    }
+</style>
