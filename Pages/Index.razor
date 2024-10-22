@@ -1,0 +1,13 @@
+﻿@page "/"
+@inject NavigationManager Navigation
+
+<h1>Welcome</h1>
+<p>You will be redirected to the login page.</p>
+
+@code {
+    protected override void OnInitialized()
+    {
+        // Redirect to the login page
+        Navigation.NavigateTo("/login");
+    }
+}
