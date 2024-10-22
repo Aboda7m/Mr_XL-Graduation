@@ -1,29 +1,27 @@
 @page "/login"
-@inject Mr_XL_Graduation.Services.UserService UserService // Ensure this matches your UserService namespace
+@inject Mr_XL_Graduation.Services.UserService UserService // Adjust according to your namespace
 @inject NavigationManager NavigationManager
 
 <h2 style="text-align:center">Login Form</h2>
 
-
-@if (loginFailed)
+@if (!string.IsNullOrEmpty(ErrorMessage))
 {
     <div style="color: red; text-align: center;">
-        Invalid username or password.
+        @ErrorMessage
     </div>
 }
 
-<form onsubmit="HandleLogin" method="preventDefault">
-    <!-- Prevent default form submission -->
+<form @onsubmit="HandleLogin">
     <div class="imgcontainer">
         <img src="img_avatar2.png" alt="Avatar" class="avatar">
     </div>
 
     <div class="container">
         <label for="uname"><b>Username</b></label>
-        <input type="text" @bind="@username" placeholder="Enter Username" required />
+        <input type="text" @bind="Username" placeholder="Enter Username" required>
 
         <label for="psw"><b>Password</b></label>
-        <input type="password" @bind="@password" placeholder="Enter Password" required />
+        <input type="password" @bind="Password" placeholder="Enter Password" required>
 
         <button type="submit">Login</button>
         <label>
@@ -97,20 +95,25 @@
 </style>
 
 @code {
-    private string username;
-    private string password;
-    private bool loginFailed = false;
+    private string Username { get; set; }
+    private string Password { get; set; }
+    private string ErrorMessage { get; set; }
 
-    private async Task HandleLogin()
+    private void HandleLogin()
     {
-        if (UserService.ValidateUser(username, password))
+        // Clear previous error message
+        ErrorMessage = null;
+
+        // Validate user credentials
+        if (UserService.ValidateUser(Username, Password))
         {
-            // Navigate to welcome page
-            NavigationManager.NavigateTo($"/welcome/{username}");
+            // Redirect to the welcome page
+            NavigationManager.NavigateTo($"/welcome/{Username}");
         }
         else
         {
-            loginFailed = true; // Show error message
+            // Set error message
+            ErrorMessage = "Invalid username or password.";
         }
     }
 }
