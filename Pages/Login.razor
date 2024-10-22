@@ -1,7 +1,9 @@
 @page "/login"
-@inject UserService UserService // Injecting the UserService
+@inject Mr_XL_Graduation.Services.UserService UserService // Ensure this matches your UserService namespace
+@inject NavigationManager NavigationManager
 
 <h2 style="text-align:center">Login Form</h2>
+
 
 @if (loginFailed)
 {

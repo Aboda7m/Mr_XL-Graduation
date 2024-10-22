@@ -1,26 +1,19 @@
-// Models/UserService.cs
-using Mr_XL_Graduation.Models;
+using System.Collections.Generic;
 
-namespace Mr_XL_Graduation.Services
+namespace Mr_XL_Graduation.Services // Ensure this matches the namespace you are using
 {
     public class UserService
     {
-        private readonly User _user;
-
-        public UserService()
+        // A dictionary to hold user credentials
+        private readonly Dictionary<string, string> users = new()
         {
-            // Initialize with a single user for demonstration purposes
-            _user = new User
-            {
-                Username = "Mr_xl",
-                Password = "pass123"
-            };
-        }
+            { "Mr_xl", "pass123" } // Example user
+        };
 
-        public bool Authenticate(string username, string password)
+        // Method to validate the user credentials
+        public bool ValidateUser(string username, string password)
         {
-            return _user.Username.Equals(username, StringComparison.OrdinalIgnoreCase) &&
-                   _user.Password == password;
+            return users.TryGetValue(username, out var storedPassword) && storedPassword == password;
         }
     }
 }

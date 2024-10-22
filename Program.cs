@@ -1,18 +1,14 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Mr_XL_Graduation.Services; // Ensure to include your service namespace
+using Mr_XL_Graduation.Services; // Ensure this using directive is present
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-
-// Register the UserService
-builder.Services.AddSingleton<UserService>(); // Use AddSingleton or AddScoped based on your needs
+builder.Services.AddSingleton<UserService>(); // Register the UserService
 
 var app = builder.Build();
 

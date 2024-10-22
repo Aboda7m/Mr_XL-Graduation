@@ -10,6 +10,9 @@
     [Parameter]
     public string username { get; set; }
 
+    [Inject] // Inject NavigationManager
+    private NavigationManager NavigationManager { get; set; }
+
     private void LogOut()
     {
         // Logic to handle logout (e.g., clearing authentication)
