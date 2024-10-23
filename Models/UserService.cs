@@ -3,6 +3,7 @@ using Mr_XL_Graduation.Data;
 using Mr_XL_Graduation.Models;
 using System;
 using System.Linq;
+using System.Collections.Generic; // Import for handling lists
 using System.Diagnostics; // Import for debugging
 
 namespace Mr_XL_Graduation.Services
@@ -91,7 +92,6 @@ namespace Mr_XL_Graduation.Services
             return (true, string.Empty);
         }
 
-
         private string GenerateStudentId()
         {
             // Hardcoding the year to 2024
@@ -142,5 +142,23 @@ namespace Mr_XL_Graduation.Services
             return newStudentId;
         }
 
+        // ----------- New Methods for Balance Management -----------
+
+        // Method to retrieve all students and their balances
+        public List<Student> GetAllStudents()
+        {
+            return _context.Students.ToList();
+        }
+
+        // Method to update a student's balance
+        public void UpdateStudentBalance(string studentId, decimal newBalance)
+        {
+            var student = _context.Students.FirstOrDefault(s => s.StudentId == studentId);
+            if (student != null)
+            {
+                student.Balance = newBalance;
+                _context.SaveChanges();
+            }
+        }
     }
 }
