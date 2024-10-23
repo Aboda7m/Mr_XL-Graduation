@@ -5,11 +5,18 @@
 namespace Mr_XL_Graduation.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateStudentSeedData : Migration
+    public partial class RemovedAdmin : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AddColumn<bool>(
+                name: "IsAdmin",
+                table: "Users",
+                type: "bit",
+                nullable: false,
+                defaultValue: false);
+
             migrationBuilder.AddColumn<string>(
                 name: "Course",
                 table: "Students",
@@ -24,8 +31,8 @@ namespace Mr_XL_Graduation.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Username", "Password", "StudentId" },
-                values: new object[] { "Mr_xl", "pass123", "0000000000" });
+                columns: new[] { "Username", "IsAdmin", "Password", "StudentId" },
+                values: new object[] { "Mr_xl", true, "AQAAAAIAAYagAAAAEF5k5xVuH3noQSLnM2LeoK+CzRcjAs1iYciwXZT39AYfUtOJQAU5T9vl5VnAhssgIg==", "0000000000" });
         }
 
         /// <inheritdoc />
@@ -40,6 +47,10 @@ namespace Mr_XL_Graduation.Migrations
                 table: "Students",
                 keyColumn: "StudentId",
                 keyValue: "0000000000");
+
+            migrationBuilder.DropColumn(
+                name: "IsAdmin",
+                table: "Users");
 
             migrationBuilder.DropColumn(
                 name: "Course",

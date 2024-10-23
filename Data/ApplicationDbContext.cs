@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Mr_XL_Graduation.Models;
 
 namespace Mr_XL_Graduation.Data
@@ -15,43 +16,34 @@ namespace Mr_XL_Graduation.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Specify precision and scale for the Balance property
-            modelBuilder.Entity<Student>()
-                .Property(s => s.Balance)
-                .HasColumnType("decimal(18,2)") // 18 total digits, 2 decimal places
-                .IsRequired(); // Ensure Balance cannot be null
+            // Seed data for the students
+            modelBuilder.Entity<Student>().HasData(
+                new Student
+                {
+                    StudentId = "0000000000", // Regular user student ID
+                    FullName = "abdulrahman alkayail",
+                    Email = "mr_XL@example.com",
+                    Balance = 0,
+                    Course = "Computer Science"
+                });
 
-            // Additional configurations for User model can be added here
-            modelBuilder.Entity<User>()
-                .Property(u => u.Username)
-                .IsRequired(); // Ensure Username cannot be null
-
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.Student)
-                .WithMany()
-                .HasForeignKey(u => u.StudentId)
-                .OnDelete(DeleteBehavior.Cascade); // Cascade delete behavior
-
-            // Seed data
+            // Temporarily remove the admin user and its student entry
             modelBuilder.Entity<User>().HasData(
                 new User
                 {
                     Username = "Mr_xl",
-                    Password = "pass123", // Remember to hash passwords in production!
-                    StudentId = "0000000000" // Hardcoded StudentId with all zeros
-                }
-            );
+                    Password = HashPassword("pass123"), // Hash password here
+                    StudentId = "0000000000", // Regular user student ID
+                    IsAdmin = true
+                });
+        }
 
-            modelBuilder.Entity<Student>().HasData(
-                new Student
-                {
-                    StudentId = "0000000000", // Hardcoded StudentId with all zeros
-                    FullName = "abdulrahman alkayail", // Updated name
-                    Email = "mr_XL@example.com", // Updated email
-                    Balance = 0, // Initial balance
-                    Course = "Computer Science" // Course/major information
-                }
-            );
+        // Helper method to hash the password without using DI
+        private static string HashPassword(string password)
+        {
+            var passwordHasher = new PasswordHasher<User>(); // Create a new PasswordHasher
+            var user = new User(); // Temporary User object for hashing
+            return passwordHasher.HashPassword(user, password);
         }
     }
 }

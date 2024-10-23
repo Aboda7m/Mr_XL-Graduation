@@ -26,6 +26,9 @@ namespace Mr_XL_Graduation.Migrations
                     b.Property<string>("Username")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -44,7 +47,8 @@ namespace Mr_XL_Graduation.Migrations
                         new
                         {
                             Username = "Mr_xl",
-                            Password = "pass123",
+                            IsAdmin = true,
+                            Password = "AQAAAAIAAYagAAAAEF5k5xVuH3noQSLnM2LeoK+CzRcjAs1iYciwXZT39AYfUtOJQAU5T9vl5VnAhssgIg==",
                             StudentId = "0000000000"
                         });
                 });

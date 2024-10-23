@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Mr_XL_Graduation.Data;
 using Mr_XL_Graduation.Models;
 using System;
@@ -19,8 +20,10 @@ namespace Mr_XL_Graduation.Services
             var user = _context.Users.FirstOrDefault(u => u.Username == username);
             if (user == null) return false;
 
-            // You should hash passwords before checking
-            return user.Password == password;
+            // Verify the hashed password
+            var passwordHasher = new PasswordHasher<User>();
+            var result = passwordHasher.VerifyHashedPassword(user, user.Password, password);
+            return result == PasswordVerificationResult.Success;
         }
 
         public Student GetStudentInfo(string username)
@@ -44,10 +47,11 @@ namespace Mr_XL_Graduation.Services
             string studentId = GenerateStudentId();
 
             // Create a new User object
+            var passwordHasher = new PasswordHasher<User>();
             var newUser = new User
             {
                 Username = username,
-                Password = password, // Hash this in production
+                Password = passwordHasher.HashPassword(new User(), password), // Hash the password
                 StudentId = studentId
             };
 

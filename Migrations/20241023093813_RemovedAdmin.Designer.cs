@@ -11,8 +11,8 @@ using Mr_XL_Graduation.Data;
 namespace Mr_XL_Graduation.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241023085613_UpdateStudentSeedData")]
-    partial class UpdateStudentSeedData
+    [Migration("20241023093813_RemovedAdmin")]
+    partial class RemovedAdmin
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,6 +28,9 @@ namespace Mr_XL_Graduation.Migrations
                 {
                     b.Property<string>("Username")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -47,7 +50,8 @@ namespace Mr_XL_Graduation.Migrations
                         new
                         {
                             Username = "Mr_xl",
-                            Password = "pass123",
+                            IsAdmin = true,
+                            Password = "AQAAAAIAAYagAAAAEF5k5xVuH3noQSLnM2LeoK+CzRcjAs1iYciwXZT39AYfUtOJQAU5T9vl5VnAhssgIg==",
                             StudentId = "0000000000"
                         });
                 });
