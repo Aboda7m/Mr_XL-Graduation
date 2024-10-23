@@ -1,11 +1,17 @@
-﻿namespace Mr_XL_Graduation.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Mr_XL_Graduation.Models
 {
     public class Student
     {
+        [Key]
         public string StudentId { get; set; }
+
+        [Required]
         public string FullName { get; set; }
-        public string Course { get; set; }
-        public string Email { get; set; } // Optional field
-        // Add more fields as necessary
+
+        public string Email { get; set; }
+
+        public decimal Balance { get; set; }
     }
 }

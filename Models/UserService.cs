@@ -1,36 +1,35 @@
-using System.Collections.Generic;
+using Mr_XL_Graduation.Data;
 using Mr_XL_Graduation.Models;
+using System.Linq;
 
-namespace Mr_XL_Graduation.Services // Ensure this matches the namespace you are using
+namespace Mr_XL_Graduation.Services
 {
     public class UserService
     {
-        // A dictionary to hold user credentials
-        private readonly Dictionary<string, User> users = new()
-        {
-            { "Mr_xl", new User { Username = "Mr_xl", Password = "pass123", StudentId = "12345" } } // Example user
-        };
+        private readonly ApplicationDbContext _context;
 
-        // A dictionary to hold student information
-        private readonly Dictionary<string, Student> students = new()
+        public UserService(ApplicationDbContext context)
         {
-            { "12345", new Student { StudentId = "12345", FullName = "abdulrahman alkayail", Course = "Computer Science", Email = "mr_XL@example.com" } } // Example student
-        };
+            _context = context;
+        }
 
-        // Method to validate the user credentials
         public bool ValidateUser(string username, string password)
         {
-            return users.TryGetValue(username, out var user) && user.Password == password;
+            var user = _context.Users.FirstOrDefault(u => u.Username == username);
+            if (user == null) return false;
+
+            // You should hash passwords before checking
+            return user.Password == password;
         }
 
-        // Method to get student info by username
         public Student GetStudentInfo(string username)
         {
-            if (users.TryGetValue(username, out var user))
-            {
-                return students.TryGetValue(user.StudentId, out var student) ? student : null;
-            }
-            return null;
+            var user = _context.Users.FirstOrDefault(u => u.Username == username);
+            if (user == null) return null;
+
+            return _context.Students.FirstOrDefault(s => s.StudentId == user.StudentId);
         }
+
+        // Other methods can be added for CRUD operations
     }
 }
