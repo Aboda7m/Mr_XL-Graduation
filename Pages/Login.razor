@@ -32,6 +32,9 @@
     <div class="container" style="background-color:#f1f1f1">
         <button type="button" class="cancelbtn">Cancel</button>
         <span class="psw">Forgot <a href="#">password?</a></span>
+        <br />
+        <!-- Registration Button -->
+        <button type="button" @onclick="GoToRegister">Register as New Student</button>
     </div>
 </form>
 
@@ -115,5 +118,10 @@
             // Set error message
             ErrorMessage = "Invalid username or password.";
         }
+    }
+
+    private void GoToRegister()
+    {
+        NavigationManager.NavigateTo("/register");
     }
 }

@@ -1,0 +1,104 @@
+﻿@page "/register"
+@inject Mr_XL_Graduation.Services.UserService UserService // Adjust according to your namespace
+@inject NavigationManager NavigationManager
+
+<h2 style="text-align:center">Register New Student</h2>
+
+@if (!string.IsNullOrEmpty(SuccessMessage))
+{
+    <div style="color: green; text-align: center;">
+        @SuccessMessage
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div style="color: red; text-align: center;">
+        @ErrorMessage
+    </div>
+}
+
+<form @onsubmit="HandleRegister">
+    <div class="container">
+        <label for="fullname"><b>Full Name</b></label>
+        <input type="text" @bind="FullName" placeholder="Enter Full Name" required>
+
+        <label for="email"><b>Email</b></label>
+        <input type="email" @bind="Email" placeholder="Enter Email" required>
+
+        <label for="username"><b>Username</b></label>
+        <input type="text" @bind="Username" placeholder="Enter Username" required>
+
+        <label for="psw"><b>Password</b></label>
+        <input type="password" @bind="Password" placeholder="Enter Password" required>
+
+        <button type="submit">Register</button>
+    </div>
+</form>
+
+<style>
+    form {
+        border: 3px solid #f1f1f1;
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+    input[type=text], input[type=password], input[type=email] {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+
+    button {
+        background-color: #04AA6D;
+        color: rgb(0, 0, 0);
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+    }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+    .container {
+        padding: 16px;
+    }
+</style>
+
+@code {
+    private string FullName { get; set; }
+    private string Email { get; set; }
+    private string Username { get; set; }
+    private string Password { get; set; }
+    private string SuccessMessage { get; set; }
+    private string ErrorMessage { get; set; }
+
+    private void HandleRegister()
+    {
+        // Clear previous messages
+        SuccessMessage = null;
+        ErrorMessage = null;
+
+        // Register the new user
+        var result = UserService.RegisterUser(FullName, Email, Username, Password);
+
+        if (result.IsSuccess)
+        {
+            SuccessMessage = "Registration successful! You can now log in.";
+            NavigationManager.NavigateTo("/login");
+        }
+        else
+        {
+            ErrorMessage = result.ErrorMessage; // Use the error message returned from RegisterUser
+        }
+    }
+}

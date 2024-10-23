@@ -10,6 +10,7 @@ namespace Mr_XL_Graduation.Models
         [Required]
         public string Password { get; set; }
 
+        [Required]
         public string StudentId { get; set; }
 
         // Navigation property
