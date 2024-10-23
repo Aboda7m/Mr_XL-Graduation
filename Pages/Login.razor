@@ -17,6 +17,12 @@
     </div>
 
     <div class="container">
+        <label for="userType"><b>User Type</b></label>
+        <select @bind="UserType">
+            <option value="Student">Student</option>
+            <option value="Admin">Admin</option>
+        </select>
+
         <label for="uname"><b>Username</b></label>
         <input type="text" @bind="Username" placeholder="Enter Username" required>
 
@@ -67,9 +73,9 @@
         width: 100%;
     }
 
-    button:hover {
-        opacity: 0.8;
-    }
+        button:hover {
+            opacity: 0.8;
+        }
 
     .cancelbtn {
         width: auto;
@@ -101,28 +107,33 @@
     private string Username { get; set; }
     private string Password { get; set; }
     private string ErrorMessage { get; set; }
+    private string UserType { get; set; } = "Student"; // Default user type
 
     private void HandleLogin()
     {
         // Clear previous error message
         ErrorMessage = null;
 
-        // Validate user credentials
+        // Validate user credentials based on selected user type
         if (UserService.ValidateUser(Username, Password, out bool isAdmin))
         {
             // Redirect based on user type
-            if (isAdmin)
+            if (UserType == "Admin" && isAdmin)
             {
-                NavigationManager.NavigateTo("/admin/dashboard"); // Change to your admin dashboard URL
+                NavigationManager.NavigateTo("/admin/dashboard"); // Admin dashboard URL
+            }
+            else if (UserType == "Student" && !isAdmin)
+            {
+                NavigationManager.NavigateTo($"/welcome/{Username}"); // Student welcome page
             }
             else
             {
-                NavigationManager.NavigateTo($"/welcome/{Username}"); // Change to your student welcome page
+                ErrorMessage = "Invalid user type or credentials.";
             }
         }
         else
         {
-            // Set error message
+            // Set error message for invalid credentials
             ErrorMessage = "Invalid username or password.";
         }
     }

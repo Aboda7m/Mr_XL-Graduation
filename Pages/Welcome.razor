@@ -25,13 +25,13 @@
             <h3>Student Info</h3>
             <p><strong>ID:</strong> @studentId</p>
             <p><strong>Email:</strong> @email</p>
-            <p><strong>Course:</strong> @course</p> <!-- Add Course Info -->
+            <p><strong>Course:</strong> @course</p>
         </div>
 
         <!-- Balance Panel -->
         <div class="panel">
             <h3>Balance</h3>
-            <p>Your balance is: @balance</p> <!-- Show actual balance -->
+            <p>Your balance is: @balance</p>
         </div>
 
         <!-- Payments and Bills Panel -->
@@ -40,13 +40,6 @@
             <p>No payments due at the moment.</p>
         </div>
     </div>
-
-    @if (true)
-    {
-        <div>
-            <NavLink class="btn" href="/admin/dashboard">Go to Admin Dashboard</NavLink>
-        </div>
-    }
 
     <button class="btn" @onclick="LogOut">Logout</button>
 </div>
@@ -58,34 +51,31 @@
     private string fullName { get; set; }
     private string studentId { get; set; }
     private string email { get; set; }
-    private string course { get; set; } // Add Course variable
-    private decimal balance { get; set; } // Variable for balance
-    private bool isAdmin { get; set; } // Variable to check if the user is admin
+    private string course { get; set; }
+    private decimal balance { get; set; }
 
     [Inject]
     private NavigationManager NavigationManager { get; set; }
 
     protected override void OnInitialized()
     {
-        // Get student info based on the username
-        var studentInfo = UserService.GetStudentInfo(username);
+        // Get student info based on the username directly
+        var studentInfo = UserService.GetStudent(username);
         if (studentInfo != null)
         {
             fullName = studentInfo.FullName;
             studentId = studentInfo.StudentId;
             email = studentInfo.Email;
-            course = studentInfo.Course; // Get the course name
-            balance = studentInfo.Balance; // Get the actual balance
-            //isAdmin = studentInfo.IsAdmin; // Directly assign isAdmin from studentInfo
+            course = studentInfo.Course;
+            balance = studentInfo.Balance;
         }
         else
         {
             fullName = "Unknown User";
             studentId = "N/A";
             email = "N/A";
-            course = "N/A"; // Default value
-            balance = 0; // Default value
-            isAdmin = false; // Default value
+            course = "N/A";
+            balance = 0;
         }
     }
 

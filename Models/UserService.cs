@@ -23,8 +23,7 @@ namespace Mr_XL_Graduation.Services
             {
                 var passwordHasher = new PasswordHasher<User>();
                 var result = passwordHasher.VerifyHashedPassword(user, user.Password, password);
-
-                isAdmin = user.IsAdmin; // Set the isAdmin flag
+                isAdmin = user.IsAdmin;
                 return result == PasswordVerificationResult.Success;
             }
 
@@ -33,37 +32,36 @@ namespace Mr_XL_Graduation.Services
         }
 
         // Method to register a new student
-        public RegistrationResult RegisterStudent(string fullName, string email, string username, string password, string studentId)
+        public RegistrationResult RegisterStudent(string fullName, string email, string username, string password, string studentId, string course)
         {
-            // Check if username or email already exists
-            if (_context.Users.Any(u => u.Username == username ))
+            if (_context.Users.Any(u => u.Username == username))
             {
                 return new RegistrationResult
                 {
                     IsSuccess = false,
-                    ErrorMessage = "Username or email already exists."
+                    ErrorMessage = "Username already exists."
                 };
             }
 
-            // Create a new Student instance
             var student = new Student
             {
                 FullName = fullName,
                 Email = email,
                 Username = username,
                 StudentId = studentId,
-                // Password should be hashed before saving
-                Password = HashPassword(password)
+                Password = HashPassword(password),
+                Course = course // Add course
             };
 
-            // Add the student to the database
             _context.Students.Add(student);
             _context.SaveChanges();
 
-            return new RegistrationResult
-            {
-                IsSuccess = true
-            };
+            return new RegistrationResult { IsSuccess = true };
+        }
+
+        public Student GetStudent(string username)
+        {
+            return _context.Students.SingleOrDefault(s => s.Username == username);
         }
 
         private string HashPassword(string password)
@@ -72,8 +70,6 @@ namespace Mr_XL_Graduation.Services
             var user = new User();
             return passwordHasher.HashPassword(user, password);
         }
-
-        // Other methods remain unchanged...
     }
 
     public class RegistrationResult

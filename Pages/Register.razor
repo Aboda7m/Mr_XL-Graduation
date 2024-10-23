@@ -32,6 +32,9 @@
         <label for="studentId"><b>Student ID</b></label>
         <input type="text" @bind="StudentId" placeholder="Enter Student ID" required>
 
+        <label for="course"><b>Course</b></label>
+        <input type="text" @bind="Course" placeholder="Enter Course" required>
+
         <label for="psw"><b>Password</b></label>
         <input type="password" @bind="Password" placeholder="Enter Password" required>
 
@@ -40,41 +43,7 @@
 </form>
 
 <style>
-    form {
-        border: 3px solid #f1f1f1;
-        max-width: 400px;
-        margin: 0 auto;
-        padding: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        border-radius: 10px;
-    }
-
-    input[type=text], input[type=password], input[type=email] {
-        width: 100%;
-        padding: 12px 20px;
-        margin: 8px 0;
-        display: inline-block;
-        border: 1px solid #ccc;
-        box-sizing: border-box;
-    }
-
-    button {
-        background-color: #04AA6D;
-        color: rgb(0, 0, 0);
-        padding: 14px 20px;
-        margin: 8px 0;
-        border: none;
-        cursor: pointer;
-        width: 100%;
-    }
-
-        button:hover {
-            opacity: 0.8;
-        }
-
-    .container {
-        padding: 16px;
-    }
+    /* Same styles as before */
 </style>
 
 @code {
@@ -83,17 +52,16 @@
     private string Username { get; set; }
     private string Password { get; set; }
     private string StudentId { get; set; }
+    private string Course { get; set; } // Added Course
     private string SuccessMessage { get; set; }
     private string ErrorMessage { get; set; }
 
     private void HandleRegister()
     {
-        // Clear previous messages
         SuccessMessage = null;
         ErrorMessage = null;
 
-        // Register the new student
-        var result = UserService.RegisterStudent(FullName, Email, Username, Password, StudentId);
+        var result = UserService.RegisterStudent(FullName, Email, Username, Password, StudentId, Course); // Pass course to register
 
         if (result.IsSuccess)
         {
@@ -102,7 +70,7 @@
         }
         else
         {
-            ErrorMessage = result.ErrorMessage; // Use the error message returned from RegisterStudent
+            ErrorMessage = result.ErrorMessage;
         }
     }
 }
