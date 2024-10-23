@@ -31,6 +31,27 @@ namespace Mr_XL_Graduation.Data
                 .WithMany()
                 .HasForeignKey(u => u.StudentId)
                 .OnDelete(DeleteBehavior.Cascade); // Cascade delete behavior
+
+            // Seed data
+            modelBuilder.Entity<User>().HasData(
+                new User
+                {
+                    Username = "Mr_xl",
+                    Password = "pass123", // Remember to hash passwords in production!
+                    StudentId = "0000000000" // Hardcoded StudentId with all zeros
+                }
+            );
+
+            modelBuilder.Entity<Student>().HasData(
+                new Student
+                {
+                    StudentId = "0000000000", // Hardcoded StudentId with all zeros
+                    FullName = "abdulrahman alkayail", // Updated name
+                    Email = "mr_XL@example.com", // Updated email
+                    Balance = 0, // Initial balance
+                    Course = "Computer Science" // Course/major information
+                }
+            );
         }
     }
 }
