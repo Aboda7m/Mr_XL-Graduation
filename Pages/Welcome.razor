@@ -1,58 +1,73 @@
 @page "/welcome/{username}"
-@using Microsoft.AspNetCore.Identity
-@using Mr_XL_Graduation.Data // Adjust to your project's namespace
-@using Microsoft.AspNetCore.Components.Authorization // Add this for AuthenticationStateProvider
-@inject UserManager<IdentityUser> UserManager
-@inject SignInManager<IdentityUser> SignInManager
+@inject Mr_XL_Graduation.Services.UserService UserService
 @inject NavigationManager NavigationManager
-@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <link href="css/Welcome.css" rel="stylesheet" />
 
-@if (isAuthorized) // Show content only if authorized
-{
-        <div class="dashboard">
-            <h2>Welcome, @username!</h2>
-            <button class="btn" @onclick="LogOut">Logout</button>
+<div class="dashboard">
+    <h2>Welcome, @fullName!</h2>
+
+    <div class="grid-container">
+        <div class="panel">
+            <h3>Schedule</h3>
+            <p>No schedule available yet.</p>
         </div>
-}
-else
-{
-        <p>You are not authorized to view this page.</p>
-}
+        <div class="panel">
+            <h3>Grades</h3>
+            <p>No grades available yet.</p>
+        </div>
+        <div class="panel">
+            <h3>Student Info</h3>
+            <p><strong>ID:</strong> @studentId</p>
+            <p><strong>Email:</strong> @email</p>
+            <p><strong>Course:</strong> @course</p>
+        </div>
+        <div class="panel">
+            <h3>Balance</h3>
+            <p>Your balance is: @balance</p>
+        </div>
+        <div class="panel">
+            <h3>Payments and Bills</h3>
+            <p>No payments due at the moment.</p>
+        </div>
+    </div>
+
+    <button class="btn" @onclick="LogOut">Logout</button>
+</div>
 
 @code {
     [Parameter]
     public string username { get; set; }
 
-    private bool isAuthorized = false;
+    private string fullName { get; set; }
+    private string studentId { get; set; }
+    private string email { get; set; }
+    private string course { get; set; }
+    private decimal balance { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var currentUser = authState.User;
-
-        if (currentUser.Identity.IsAuthenticated)
+        var studentInfo = await UserService.GetStudentAsync(username);
+        if (studentInfo != null)
         {
-            var user = await UserManager.FindByNameAsync(username);
-            if (user != null && currentUser.Identity.Name == username)
-            {
-                isAuthorized = true; // User is authorized if logged in and username matches
-            }
-            else
-            {
-                NavigationManager.NavigateTo("/login");
-            }
+            fullName = studentInfo.FullName;
+            studentId = studentInfo.StudentId;
+            email = studentInfo.Email;
+            course = studentInfo.Course;
+            balance = studentInfo.Balance;
         }
         else
         {
-            NavigationManager.NavigateTo("/login");
+            fullName = "Unknown User";
+            studentId = "N/A";
+            email = "N/A";
+            course = "N/A";
+            balance = 0;
         }
     }
 
-    private async Task LogOut()
+    private void LogOut()
     {
-        await SignInManager.SignOutAsync();
         NavigationManager.NavigateTo("/login");
     }
 }

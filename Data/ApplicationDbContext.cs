@@ -1,58 +1,51 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Mr_XL_Graduation.Models;
 
 namespace Mr_XL_Graduation.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
+    public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
 
+        public DbSet<User> Users { get; set; }
         public DbSet<Student> Students { get; set; }
-        public DbSet<Admin> Admins { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-
-            // Specify precision and scale for the Balance property
-            modelBuilder.Entity<Student>(entity =>
-            {
-                entity.Property(e => e.Balance)
-                      .HasColumnType("decimal(18,2)") // Ensure Balance has decimal precision
-                      .HasDefaultValue(0); // Default value to prevent null
-            });
-
-            // Specify seeding data for Student
-            var hasher = new PasswordHasher<Student>();
-
+            // Seed data for the students
             modelBuilder.Entity<Student>().HasData(
                 new Student
                 {
-                    Id = "1",
-                    UserName = "Mr_xl",
-                    PasswordHash = hasher.HashPassword(null, "pass123"), // Hash the password
-                    StudentId = "0000000000",
+                    Username = "Mr_xl", // Assuming this is the username
+                    Password = HashPassword("pass123"), // Store hashed password
+                    StudentId = "0000000000", // Regular user student ID
                     FullName = "Abdulrahman Alkayail",
                     Email = "mr_XL@example.com",
                     Balance = 0,
-                    Course = "Computer Science"
+                    Course = "Computer Science",
+                    IsAdmin = false // Set IsAdmin flag
                 });
 
-            // Specify seeding data for Admin
             modelBuilder.Entity<Admin>().HasData(
                 new Admin
                 {
-                    Id = "2",
-                    UserName = "Admin",
-                    PasswordHash = hasher.HashPassword(null, "Admin"), // Hash the password
-                    AdminId = "1999000001",
-                    Email = "admin@example.com"
+                    Username = "Admin", // Admin username
+                    Password = HashPassword("Admin"), // Store hashed password
+                    AdminId = "1999000001", // Admin ID
+                    IsAdmin = true // Set IsAdmin flag
                 });
+        }
+
+        // Helper method to hash the password without using DI
+        private static string HashPassword(string password)
+        {
+            var passwordHasher = new PasswordHasher<User>(); // Create a new PasswordHasher
+            var user = new User(); // Temporary User object for hashing
+            return passwordHasher.HashPassword(user, password);
         }
     }
 }

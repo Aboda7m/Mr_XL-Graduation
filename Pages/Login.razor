@@ -1,17 +1,14 @@
 @page "/login"
-@using Microsoft.AspNetCore.Identity
-@using Mr_XL_Graduation.Data // Adjust this based on your project's namespace for Identity
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@inject Mr_XL_Graduation.Services.UserService UserService
 @inject NavigationManager NavigationManager
-
-<link href="css/Login.css" rel="stylesheet" />
 
 <h2 style="text-align:center">Login Form</h2>
 
 @if (!string.IsNullOrEmpty(ErrorMessage))
 {
-    <div style="color: red; text-align: center;">@ErrorMessage</div>
+    <div style="color: red; text-align: center;">
+        @ErrorMessage
+    </div>
 }
 
 <form @onsubmit="HandleLogin">
@@ -20,10 +17,16 @@
     </div>
 
     <div class="container">
-        <label for="username"><b>Username</b></label>
+        <label for="userType"><b>User Type</b></label>
+        <select @bind="UserType" required>
+            <option value="Student">Student</option>
+            <option value="Admin">Admin</option>
+        </select>
+
+        <label for="uname"><b>Username</b></label>
         <input type="text" @bind="Username" placeholder="Enter Username" required>
 
-        <label for="password"><b>Password</b></label>
+        <label for="psw"><b>Password</b></label>
         <input type="password" @bind="Password" placeholder="Enter Password" required>
 
         <button type="submit">Login</button>
@@ -33,64 +36,107 @@
     </div>
 
     <div class="container" style="background-color:#f1f1f1">
-        <button type="button" @onclick="CancelLogin">Cancel</button>
+        <button type="button" class="cancelbtn" @onclick="CancelLogin">Cancel</button>
         <span class="psw">Forgot <a href="#">password?</a></span>
         <button type="button" @onclick="GoToRegister">Register as New Student</button>
     </div>
 </form>
 
+<style>
+    form {
+        border: 3px solid #f1f1f1;
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+    input[type=text], input[type=password] {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+
+    button {
+        background-color: #04AA6D;
+        color: rgb(0, 0, 0);
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+    }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+    .cancelbtn {
+        width: auto;
+        padding: 10px 18px;
+        background-color: #f44336;
+    }
+
+    .imgcontainer {
+        text-align: center;
+        margin: 24px 0 12px 0;
+    }
+
+    img.avatar {
+        width: 40%;
+        border-radius: 50%;
+    }
+
+    .container {
+        padding: 16px;
+    }
+
+    span.psw {
+        float: right;
+        padding-top: 16px;
+    }
+</style>
+
 @code {
     private string Username { get; set; }
     private string Password { get; set; }
     private string ErrorMessage { get; set; }
+    private string UserType { get; set; } = "Student"; // Default user type
 
     private async Task HandleLogin()
     {
-        Console.WriteLine("Starting login process...");  // Debug print
         ErrorMessage = null; // Clear previous error messages
 
-        var result = await SignInManager.PasswordSignInAsync(Username, Password, true, lockoutOnFailure: false);
-
-        Console.WriteLine($"Login attempt: Username={Username}, Result={result.Succeeded}"); // Debug print
-
-        if (result.Succeeded)
+        try
         {
-            bool isAdmin = await IsUserAdmin(Username);
-            Console.WriteLine($"Is user admin: {isAdmin}"); // Debug print
-            string redirectUrl = isAdmin ? "/admin/dashboard" : $"/welcome/{Username}";
-            NavigationManager.NavigateTo(redirectUrl);
+            var user = await UserService.ValidateUserAsync(Username, Password, UserType);
+            if (user != null)
+            {
+                string redirectUrl = user.IsAdmin ? "/admin/dashboard" : $"/welcome/{Username}";
+                NavigationManager.NavigateTo(redirectUrl);
+            }
+            else
+            {
+                ErrorMessage = "Invalid username or password.";
+            }
         }
-        else
+        catch (Exception ex)
         {
-            ErrorMessage = "Invalid username or password.";
-            Console.WriteLine($"Login failed: {ErrorMessage}"); // Debug print
+            ErrorMessage = $"An error occurred: {ex.Message}";
         }
     }
 
     private void CancelLogin()
     {
-        NavigationManager.NavigateTo("/home");
+        NavigationManager.NavigateTo("/home"); // Assuming there's a home page
     }
 
     private void GoToRegister()
     {
         NavigationManager.NavigateTo("/register");
-    }
-
-    private async Task<bool> IsUserAdmin(string username)
-    {
-        Console.WriteLine($"Checking if user is admin: {username}"); // Debug print
-        var user = await UserManager.FindByNameAsync(username);
-
-        if (user != null)
-        {
-            var roles = await UserManager.GetRolesAsync(user);
-            bool isAdmin = roles.Contains("Admin"); // Adjust based on your role naming convention
-            Console.WriteLine($"User found. Roles: {string.Join(", ", roles)}. Is Admin: {isAdmin}"); // Debug print
-            return isAdmin;
-        }
-
-        Console.WriteLine("User not found."); // Debug print
-        return false;
     }
 }
