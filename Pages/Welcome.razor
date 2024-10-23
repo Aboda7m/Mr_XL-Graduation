@@ -1,39 +1,47 @@
 @page "/welcome/{username}"
 @inject Mr_XL_Graduation.Services.UserService UserService
+@inject IHttpContextAccessor HttpContextAccessor // Inject IHttpContextAccessor to access session
 @inject NavigationManager NavigationManager
 
 <link href="css/Welcome.css" rel="stylesheet" />
 
-<div class="dashboard">
-    <h2>Welcome, @fullName!</h2>
+@if (isAuthorized) // Show content only if authorized
+{
+        <div class="dashboard">
+            <h2>Welcome, @fullName!</h2>
 
-    <div class="grid-container">
-        <div class="panel">
-            <h3>Schedule</h3>
-            <p>No schedule available yet.</p>
-        </div>
-        <div class="panel">
-            <h3>Grades</h3>
-            <p>No grades available yet.</p>
-        </div>
-        <div class="panel">
-            <h3>Student Info</h3>
-            <p><strong>ID:</strong> @studentId</p>
-            <p><strong>Email:</strong> @email</p>
-            <p><strong>Course:</strong> @course</p>
-        </div>
-        <div class="panel">
-            <h3>Balance</h3>
-            <p>Your balance is: @balance</p>
-        </div>
-        <div class="panel">
-            <h3>Payments and Bills</h3>
-            <p>No payments due at the moment.</p>
-        </div>
-    </div>
+            <div class="grid-container">
+                <div class="panel">
+                    <h3>Schedule</h3>
+                    <p>No schedule available yet.</p>
+                </div>
+                <div class="panel">
+                    <h3>Grades</h3>
+                    <p>No grades available yet.</p>
+                </div>
+                <div class="panel">
+                    <h3>Student Info</h3>
+                    <p><strong>ID:</strong> @studentId</p>
+                    <p><strong>Email:</strong> @email</p>
+                    <p><strong>Course:</strong> @course</p>
+                </div>
+                <div class="panel">
+                    <h3>Balance</h3>
+                    <p>Your balance is: @balance</p>
+                </div>
+                <div class="panel">
+                    <h3>Payments and Bills</h3>
+                    <p>No payments due at the moment.</p>
+                </div>
+            </div>
 
-    <button class="btn" @onclick="LogOut">Logout</button>
-</div>
+            <button class="btn" @onclick="LogOut">Logout</button>
+        </div>
+}
+else
+{
+        <p>You are not authorized to view this page.</p>
+}
 
 @code {
     [Parameter]
@@ -45,24 +53,49 @@
     private string course { get; set; }
     private decimal balance { get; set; }
 
+    private bool isAuthorized = false; // Authorization flag
+
     protected override async Task OnInitializedAsync()
     {
-        var studentInfo = await UserService.GetStudentAsync(username);
-        if (studentInfo != null)
+        // Check if the user is logged in
+        var session = HttpContextAccessor.HttpContext.Session;
+        var loggedInUsername = session.GetString("Username");
+
+        if (string.IsNullOrEmpty(loggedInUsername))
         {
-            fullName = studentInfo.FullName;
-            studentId = studentInfo.StudentId;
-            email = studentInfo.Email;
-            course = studentInfo.Course;
-            balance = studentInfo.Balance;
+            // If not logged in, redirect to the login page
+            NavigationManager.NavigateTo("/login");
+            return;
+        }
+
+        // Check if the username in the route matches the logged in username
+        if (loggedInUsername.Equals(username, StringComparison.OrdinalIgnoreCase))
+        {
+            isAuthorized = true; // User is authorized
+
+            // Load user information
+            var studentInfo = await UserService.GetStudentAsync(username);
+            if (studentInfo != null)
+            {
+                fullName = studentInfo.FullName;
+                studentId = studentInfo.StudentId;
+                email = studentInfo.Email;
+                course = studentInfo.Course;
+                balance = studentInfo.Balance;
+            }
+            else
+            {
+                fullName = "Unknown User";
+                studentId = "N/A";
+                email = "N/A";
+                course = "N/A";
+                balance = 0;
+            }
         }
         else
         {
-            fullName = "Unknown User";
-            studentId = "N/A";
-            email = "N/A";
-            course = "N/A";
-            balance = 0;
+            // If username does not match, redirect to login
+            NavigationManager.NavigateTo("/login");
         }
     }
 

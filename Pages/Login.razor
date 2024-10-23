@@ -1,7 +1,9 @@
 @page "/login"
 @inject Mr_XL_Graduation.Services.UserService UserService
-@inject IHttpContextAccessor HttpContextAccessor // Inject IHttpContextAccessor
+@inject IHttpContextAccessor HttpContextAccessor
 @inject NavigationManager NavigationManager
+
+<link href="css/Login.css" rel="stylesheet" />
 
 <h2 style="text-align:center">Login Form</h2>
 
@@ -41,7 +43,6 @@
     </div>
 </form>
 
- 
 @code {
     private string Username { get; set; }
     private string Password { get; set; }
@@ -62,6 +63,7 @@
                 session.SetString("Username", user.Username);
                 session.SetString("IsAdmin", user.IsAdmin.ToString());
 
+                // Redirect to the welcome page with the username
                 string redirectUrl = user.IsAdmin ? "/admin/dashboard" : $"/welcome/{Username}";
                 NavigationManager.NavigateTo(redirectUrl);
             }
