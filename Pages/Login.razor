@@ -1,6 +1,8 @@
 @page "/login"
-@inject Mr_XL_Graduation.Services.UserService UserService
-@inject IHttpContextAccessor HttpContextAccessor
+@using Microsoft.AspNetCore.Identity
+@using Mr_XL_Graduation.Data // Adjust this based on your project's namespace for Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 @inject NavigationManager NavigationManager
 
 <link href="css/Login.css" rel="stylesheet" />
@@ -18,16 +20,10 @@
     </div>
 
     <div class="container">
-        <label for="userType"><b>User Type</b></label>
-        <select @bind="UserType" required>
-            <option value="Student">Student</option>
-            <option value="Admin">Admin</option>
-        </select>
-
-        <label for="uname"><b>Username</b></label>
+        <label for="username"><b>Username</b></label>
         <input type="text" @bind="Username" placeholder="Enter Username" required>
 
-        <label for="psw"><b>Password</b></label>
+        <label for="password"><b>Password</b></label>
         <input type="password" @bind="Password" placeholder="Enter Password" required>
 
         <button type="submit">Login</button>
@@ -37,7 +33,7 @@
     </div>
 
     <div class="container" style="background-color:#f1f1f1">
-        <button type="button" class="cancelbtn" @onclick="CancelLogin">Cancel</button>
+        <button type="button" @onclick="CancelLogin">Cancel</button>
         <span class="psw">Forgot <a href="#">password?</a></span>
         <button type="button" @onclick="GoToRegister">Register as New Student</button>
     </div>
@@ -47,44 +43,54 @@
     private string Username { get; set; }
     private string Password { get; set; }
     private string ErrorMessage { get; set; }
-    private string UserType { get; set; } = "Student"; // Default user type
 
     private async Task HandleLogin()
     {
+        Console.WriteLine("Starting login process...");  // Debug print
         ErrorMessage = null; // Clear previous error messages
 
-        try
-        {
-            var user = await UserService.ValidateUserAsync(Username, Password, UserType);
-            if (user != null)
-            {
-                // Set user session
-                var session = HttpContextAccessor.HttpContext.Session; // Access session through HttpContextAccessor
-                session.SetString("Username", user.Username);
-                session.SetString("IsAdmin", user.IsAdmin.ToString());
+        var result = await SignInManager.PasswordSignInAsync(Username, Password, true, lockoutOnFailure: false);
 
-                // Redirect to the welcome page with the username
-                string redirectUrl = user.IsAdmin ? "/admin/dashboard" : $"/welcome/{Username}";
-                NavigationManager.NavigateTo(redirectUrl);
-            }
-            else
-            {
-                ErrorMessage = "Invalid username or password.";
-            }
-        }
-        catch (Exception ex)
+        Console.WriteLine($"Login attempt: Username={Username}, Result={result.Succeeded}"); // Debug print
+
+        if (result.Succeeded)
         {
-            ErrorMessage = $"An error occurred: {ex.Message}";
+            bool isAdmin = await IsUserAdmin(Username);
+            Console.WriteLine($"Is user admin: {isAdmin}"); // Debug print
+            string redirectUrl = isAdmin ? "/admin/dashboard" : $"/welcome/{Username}";
+            NavigationManager.NavigateTo(redirectUrl);
+        }
+        else
+        {
+            ErrorMessage = "Invalid username or password.";
+            Console.WriteLine($"Login failed: {ErrorMessage}"); // Debug print
         }
     }
 
     private void CancelLogin()
     {
-        NavigationManager.NavigateTo("/home"); // Assuming there's a home page
+        NavigationManager.NavigateTo("/home");
     }
 
     private void GoToRegister()
     {
         NavigationManager.NavigateTo("/register");
+    }
+
+    private async Task<bool> IsUserAdmin(string username)
+    {
+        Console.WriteLine($"Checking if user is admin: {username}"); // Debug print
+        var user = await UserManager.FindByNameAsync(username);
+
+        if (user != null)
+        {
+            var roles = await UserManager.GetRolesAsync(user);
+            bool isAdmin = roles.Contains("Admin"); // Adjust based on your role naming convention
+            Console.WriteLine($"User found. Roles: {string.Join(", ", roles)}. Is Admin: {isAdmin}"); // Debug print
+            return isAdmin;
+        }
+
+        Console.WriteLine("User not found."); // Debug print
+        return false;
     }
 }

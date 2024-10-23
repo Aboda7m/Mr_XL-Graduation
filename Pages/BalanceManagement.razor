@@ -40,18 +40,18 @@
                 <tbody>
                 @foreach (var student in students)
                 {
-                            <tr>
-                                <td>@student.FullName</td>
-                                <td>@student.Email</td>
-                                <td>@student.StudentId</td>
-                                <td>@student.Course</td>
-                                <td>
-                                    <input type="number" @bind="student.Balance" min="0" />
-                                </td>
-                                <td>
-                                    <button @onclick="() => UpdateBalance(student)">Update</button>
-                                </td>
-                            </tr>
+                        <tr>
+                            <td>@student.FullName</td>
+                            <td>@student.Email</td>
+                            <td>@student.StudentId</td>
+                            <td>@student.Course</td>
+                            <td>
+                                <input type="number" @bind="student.Balance" min="0" />
+                            </td>
+                            <td>
+                                <button @onclick="() => UpdateBalance(student)">Update</button>
+                            </td>
+                        </tr>
                 }
                 </tbody>
             </table>
@@ -84,7 +84,7 @@
 
         try
         {
-            await UserService.UpdateStudentBalanceAsync(student.Username, student.Balance);
+            await UserService.UpdateStudentBalanceAsync(student.UserName, student.Balance); // Changed Username to UserName
             SuccessMessage = "Balance updated successfully!";
         }
         catch (Exception ex)
