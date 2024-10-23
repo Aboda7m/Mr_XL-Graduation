@@ -1,21 +1,43 @@
 @page "/welcome/{username}"
-@inject Mr_XL_Graduation.Services.UserService UserService // Adjust according to your namespace
+@inject Mr_XL_Graduation.Services.UserService UserService
 
-<div class="container">
+<div class="dashboard">
     <h2>Welcome, @fullName!</h2>
 
-    <div class="info">
-        <p><strong>Student ID:</strong> @studentId</p>
-        <p><strong>Email:</strong> @email</p>
+    <div class="grid-container">
+        <!-- Schedule Panel -->
+        <div class="panel">
+            <h3>Schedule</h3>
+            <p>No schedule available yet.</p>
+        </div>
+
+        <!-- Grades Panel -->
+        <div class="panel">
+            <h3>Grades</h3>
+            <p>No grades available yet.</p>
+        </div>
+
+        <!-- Student Info Panel -->
+        <div class="panel">
+            <h3>Student Info</h3>
+            <p><strong>ID:</strong> @studentId</p>
+            <p><strong>Email:</strong> @email</p>
+        </div>
+
+        <!-- Balance Panel -->
+        <div class="panel">
+            <h3>Balance</h3>
+            <p>Your balance is: $0.00</p>
+        </div>
+
+        <!-- Payments and Bills Panel -->
+        <div class="panel">
+            <h3>Payments and Bills</h3>
+            <p>No payments due at the moment.</p>
+        </div>
     </div>
 
-    <div class="button-container">
-        <button class="btn" @onclick="NavigateToSchedule">Schedule</button>
-        <button class="btn" @onclick="NavigateToGrades">Grades</button>
-        <button class="btn" @onclick="NavigateToAttendance">Attendance</button>
-        <button class="btn" @onclick="NavigateToInfo">Student Information</button>
-        <button class="btn" @onclick="LogOut">Logout</button>
-    </div>
+    <button class="btn" @onclick="LogOut">Logout</button>
 </div>
 
 @code {
@@ -41,18 +63,16 @@
         }
         else
         {
-            // Handle case where student info is not found
             fullName = "Unknown User";
             studentId = "N/A";
             email = "N/A";
         }
     }
 
-    private void NavigateToSchedule() { /* Logic for navigating */ }
-    private void NavigateToGrades() { /* Logic for navigating */ }
-    private void NavigateToAttendance() { /* Logic for navigating */ }
-    private void NavigateToInfo() { /* Logic for navigating */ }
-    private void LogOut() { NavigationManager.NavigateTo("/login"); }
+    private void LogOut()
+    {
+        NavigationManager.NavigateTo("/login");
+    }
 }
 
 <style>
@@ -64,52 +84,59 @@
         padding: 20px;
     }
 
-    .container {
-        max-width: 800px;
+    .dashboard {
+        max-width: 1200px;
         margin: 0 auto;
-        padding: 20px;
-        border-radius: 8px;
-        background-color: #fff;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
     h2 {
+        text-align: center;
         color: #6f2c91; /* Purple accent */
         margin-bottom: 20px;
     }
 
-    .info {
-        margin-bottom: 30px;
-        border-left: 4px solid #6f2c91; /* Purple accent on the left */
-        padding-left: 15px;
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
     }
 
-    .button-container {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start; /* Align buttons to the start */
-        gap: 15px;
+    .panel {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
+
+        .panel h3 {
+            color: #6f2c91; /* Purple accent */
+            margin-bottom: 10px;
+        }
 
     .btn {
-        background-color: #6f2c91; /* Purple accent */
+        background-color: #6f2c91;
         color: white;
         border: none;
         border-radius: 5px;
-        padding: 15px 30px;
+        padding: 10px 20px;
         font-size: 1em;
         cursor: pointer;
         transition: background-color 0.3s, transform 0.3s;
-        width: 100%; /* Full width */
+        margin-top: 30px;
+        display: block;
+        width: 100px;
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
     }
 
         .btn:hover {
-            background-color: #5a2475; /* Darker purple on hover */
+            background-color: #5a2475;
             transform: translateY(-2px);
         }
 
         .btn:active {
-            background-color: #4a1d61; /* Even darker on active */
+            background-color: #4a1d61;
             transform: translateY(0);
         }
 </style>
