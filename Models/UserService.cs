@@ -1,5 +1,6 @@
 using Mr_XL_Graduation.Data;
 using Mr_XL_Graduation.Models;
+using System;
 using System.Linq;
 
 namespace Mr_XL_Graduation.Services
@@ -39,18 +40,21 @@ namespace Mr_XL_Graduation.Services
                 return (false, "This username is already taken.");
             }
 
+            // Generate new StudentId
+            string studentId = GenerateStudentId();
+
             // Create a new User object
             var newUser = new User
             {
                 Username = username,
                 Password = password, // Hash this in production
-                StudentId = Guid.NewGuid().ToString() // Generate a new StudentId or use an existing logic
+                StudentId = studentId
             };
 
             // Create a new Student object
             var newStudent = new Student
             {
-                StudentId = newUser.StudentId,
+                StudentId = studentId,
                 FullName = fullName,
                 Email = email,
                 Balance = 0 // Default balance can be set to 0 or any initial value
@@ -64,5 +68,30 @@ namespace Mr_XL_Graduation.Services
             return (true, string.Empty);
         }
 
+        private string GenerateStudentId()
+        {
+            var currentYear = DateTime.Now.Year.ToString();
+            // Get the highest increment for the current year
+            var lastStudentId = _context.Students
+                .Where(s => s.StudentId.StartsWith(currentYear))
+                .Select(s => s.StudentId)
+                .OrderByDescending(id => id)
+                .FirstOrDefault();
+
+            // Extract the increment part and increment it
+            int nextIncrement = 1; // Start at 1 if there are no existing IDs
+            if (lastStudentId != null)
+            {
+                // Assuming the format is YYYY 0000 XX
+                var parts = lastStudentId.Split(' ');
+                if (parts.Length == 2 && int.TryParse(parts[1], out int lastIncrement))
+                {
+                    nextIncrement = lastIncrement + 1; // Increment the last ID
+                }
+            }
+
+            // Format the new student ID
+            return $"{currentYear} {nextIncrement:D4}";
+        }
     }
 }
