@@ -14,7 +14,7 @@ namespace Mr_XL_Graduation.Services // Ensure this matches the namespace you are
         // A dictionary to hold student information
         private readonly Dictionary<string, Student> students = new()
         {
-            { "12345", new Student { StudentId = "12345", FullName = "abdulrahman alkhiali", Course = "Computer Science", Email = "mr_XL@example.com" } } // Example student
+            { "12345", new Student { StudentId = "12345", FullName = "abdulrahman alkayail", Course = "Computer Science", Email = "mr_XL@example.com" } } // Example student
         };
 
         // Method to validate the user credentials
