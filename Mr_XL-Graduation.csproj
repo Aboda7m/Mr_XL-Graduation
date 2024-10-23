@@ -8,7 +8,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\StudentInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Models\NewFile.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Models\StudentInfo.cs" />
   </ItemGroup>
 
   <ItemGroup>

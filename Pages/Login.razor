@@ -1,5 +1,5 @@
 @page "/login"
-@inject Mr_XL_Graduation.Services.UserService UserService // Adjust according to your namespace
+@inject Mr_XL_Graduation.Services.UserService UserService
 @inject NavigationManager NavigationManager
 
 <h2 style="text-align:center">Login Form</h2>
@@ -67,9 +67,9 @@
         width: 100%;
     }
 
-        button:hover {
-            opacity: 0.8;
-        }
+    button:hover {
+        opacity: 0.8;
+    }
 
     .cancelbtn {
         width: auto;
@@ -108,10 +108,17 @@
         ErrorMessage = null;
 
         // Validate user credentials
-        if (UserService.ValidateUser(Username, Password))
+        if (UserService.ValidateUser(Username, Password, out bool isAdmin))
         {
-            // Redirect to the welcome page
-            NavigationManager.NavigateTo($"/welcome/{Username}");
+            // Redirect based on user type
+            if (isAdmin)
+            {
+                NavigationManager.NavigateTo("/admin/dashboard"); // Change to your admin dashboard URL
+            }
+            else
+            {
+                NavigationManager.NavigateTo($"/welcome/{Username}"); // Change to your student welcome page
+            }
         }
         else
         {

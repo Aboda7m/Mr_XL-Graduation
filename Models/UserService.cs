@@ -1,10 +1,8 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Mr_XL_Graduation.Data;
 using Mr_XL_Graduation.Models;
-using System;
 using System.Linq;
-using System.Collections.Generic; // Import for handling lists
-using System.Diagnostics; // Import for debugging
 
 namespace Mr_XL_Graduation.Services
 {
@@ -17,148 +15,70 @@ namespace Mr_XL_Graduation.Services
             _context = context;
         }
 
-        public bool ValidateUser(string username, string password)
+        // Method to validate user credentials
+        public bool ValidateUser(string username, string password, out bool isAdmin)
         {
-            var user = _context.Users.FirstOrDefault(u => u.Username == username);
-            if (user == null) return false;
-
-            // Verify the hashed password
-            var passwordHasher = new PasswordHasher<User>();
-            var result = passwordHasher.VerifyHashedPassword(user, user.Password, password);
-            return result == PasswordVerificationResult.Success;
-        }
-
-        public Student GetStudentInfo(string username)
-        {
-            var user = _context.Users.FirstOrDefault(u => u.Username == username);
-            if (user == null) return null;
-
-            return _context.Students.FirstOrDefault(s => s.StudentId == user.StudentId);
-        }
-
-        // New method for registering a user
-        public (bool IsSuccess, string ErrorMessage) RegisterUser(string fullName, string email, string username, string password)
-        {
-            Debug.WriteLine("Starting user registration...");
-
-            // Check if the username already exists
-            if (_context.Users.Any(u => u.Username == username))
+            var user = _context.Users.SingleOrDefault(u => u.Username == username);
+            if (user != null)
             {
-                Debug.WriteLine($"Registration failed: Username '{username}' already exists.");
-                return (false, "This username is already taken.");
+                var passwordHasher = new PasswordHasher<User>();
+                var result = passwordHasher.VerifyHashedPassword(user, user.Password, password);
+
+                isAdmin = user.IsAdmin; // Set the isAdmin flag
+                return result == PasswordVerificationResult.Success;
             }
 
-            // Generate new StudentId
-            string studentId = GenerateStudentId();
-            Debug.WriteLine($"Generated StudentId: {studentId}");
+            isAdmin = false;
+            return false;
+        }
 
-            // Create a new User object
-            var passwordHasher = new PasswordHasher<User>();
-            var newUser = new User
+        // Method to register a new student
+        public RegistrationResult RegisterStudent(string fullName, string email, string username, string password, string studentId)
+        {
+            // Check if username or email already exists
+            if (_context.Users.Any(u => u.Username == username ))
             {
-                Username = username,
-                Password = passwordHasher.HashPassword(new User(), password), // Hash the password
-                StudentId = studentId,
-                IsAdmin = false // Default value for IsAdmin, assuming new users are not admins
-            };
-            Debug.WriteLine($"New User created: Username = {newUser.Username}, StudentId = {newUser.StudentId}");
+                return new RegistrationResult
+                {
+                    IsSuccess = false,
+                    ErrorMessage = "Username or email already exists."
+                };
+            }
 
-            // Create a new Student object
-            var newStudent = new Student
+            // Create a new Student instance
+            var student = new Student
             {
-                StudentId = studentId,
                 FullName = fullName,
                 Email = email,
-                Balance = 0, // Initialize Balance to 0
-                Course = "Computer Science" // Set default Course
+                Username = username,
+                StudentId = studentId,
+                // Password should be hashed before saving
+                Password = HashPassword(password)
             };
-            Debug.WriteLine($"New Student created: FullName = {newStudent.FullName}, Email = {newStudent.Email}, Course = {newStudent.Course}");
 
-            try
-            {
-                // Add the new user and student to the context
-                _context.Users.Add(newUser);
-                _context.Students.Add(newStudent);
-                Debug.WriteLine("Attempting to save changes to the database...");
-                _context.SaveChanges(); // Save changes to the database
-                Debug.WriteLine("User registration successful.");
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error during registration: {ex.Message}");
-                return (false, "An error occurred during registration. Please try again later.");
-            }
+            // Add the student to the database
+            _context.Students.Add(student);
+            _context.SaveChanges();
 
-            return (true, string.Empty);
+            return new RegistrationResult
+            {
+                IsSuccess = true
+            };
         }
 
-        private string GenerateStudentId()
+        private string HashPassword(string password)
         {
-            // Hardcoding the year to 2024
-            string currentYear = "2024";
-            Debug.WriteLine($"Generating Student ID for the year: {currentYear}");
-
-            // Get the highest student ID for the current year
-            var lastStudentId = _context.Students
-                .Where(s => s.StudentId.StartsWith(currentYear))
-                .Select(s => s.StudentId)
-                .OrderByDescending(id => id)
-                .FirstOrDefault();
-
-            // Log the last student ID found (if any)
-            if (lastStudentId != null)
-            {
-                Debug.WriteLine($"Last Student ID found: {lastStudentId}");
-            }
-            else
-            {
-                Debug.WriteLine("No existing Student IDs found for the current year.");
-            }
-
-            // Extract the increment part and increment it
-            int nextIncrement = 1; // Default to 1 if there are no existing IDs
-            if (lastStudentId != null)
-            {
-                // Extract the last 6 digits and increment
-                Debug.WriteLine($"Attempting to parse increment from last Student ID: {lastStudentId}");
-
-                if (int.TryParse(lastStudentId.Substring(4), out int lastIncrement))
-                {
-                    nextIncrement = lastIncrement + 1; // Increment the last ID
-                    Debug.WriteLine($"Parsed last increment: {lastIncrement}. Next increment will be: {nextIncrement}");
-                }
-                else
-                {
-                    // Handle the case where parsing fails
-                    Debug.WriteLine("Failed to parse increment from last Student ID. Resetting next increment to 1.");
-                    nextIncrement = 1;
-                }
-            }
-
-            // Format the new student ID as YYYYXXXXXX (10 digits total)
-            string newStudentId = $"{currentYear}{nextIncrement:D6}"; // Generates ID in the format YYYYXXXXXX
-            Debug.WriteLine($"Generated new Student ID: {newStudentId}");
-
-            return newStudentId;
+            var passwordHasher = new PasswordHasher<User>();
+            var user = new User();
+            return passwordHasher.HashPassword(user, password);
         }
 
-        // ----------- New Methods for Balance Management -----------
+        // Other methods remain unchanged...
+    }
 
-        // Method to retrieve all students and their balances
-        public List<Student> GetAllStudents()
-        {
-            return _context.Students.ToList();
-        }
-
-        // Method to update a student's balance
-        public void UpdateStudentBalance(string studentId, decimal newBalance)
-        {
-            var student = _context.Students.FirstOrDefault(s => s.StudentId == studentId);
-            if (student != null)
-            {
-                student.Balance = newBalance;
-                _context.SaveChanges();
-            }
-        }
+    public class RegistrationResult
+    {
+        public bool IsSuccess { get; set; }
+        public string ErrorMessage { get; set; }
     }
 }

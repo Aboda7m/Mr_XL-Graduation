@@ -20,21 +20,23 @@ namespace Mr_XL_Graduation.Data
             modelBuilder.Entity<Student>().HasData(
                 new Student
                 {
+                    Username = "Mr_xl", // Assuming this is the username
+                    Password = HashPassword("pass123"), // Store hashed password
                     StudentId = "0000000000", // Regular user student ID
-                    FullName = "abdulrahman alkayail",
+                    FullName = "Abdulrahman Alkayail",
                     Email = "mr_XL@example.com",
                     Balance = 0,
-                    Course = "Computer Science"
+                    Course = "Computer Science",
+                    IsAdmin = false // Set IsAdmin flag
                 });
 
-            // Temporarily remove the admin user and its student entry
-            modelBuilder.Entity<User>().HasData(
-                new User
+            modelBuilder.Entity<Admin>().HasData(
+                new Admin
                 {
-                    Username = "Mr_xl",
-                    Password = HashPassword("pass123"), // Hash password here
-                    StudentId = "0000000000", // Regular user student ID
-                    IsAdmin = true
+                    Username = "Admin", // Admin username
+                    Password = HashPassword("Admin"), // Store hashed password
+                    AdminId = "1999000001", // Admin ID
+                    IsAdmin = true // Set IsAdmin flag
                 });
         }
 
