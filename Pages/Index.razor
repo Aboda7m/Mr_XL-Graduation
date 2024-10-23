@@ -7,7 +7,18 @@
 @code {
     protected override void OnInitialized()
     {
+        
+        
         // Redirect to the login page
-        Navigation.NavigateTo("/login");
+        try
+        {
+            Navigation.NavigateTo("/login", false);
+        }
+        catch (NavigationException ex)
+        {
+            // Log the exception or display an error message
+            Console.WriteLine($"Navigation failed: {ex.Message}");
+        }
+
     }
 }
