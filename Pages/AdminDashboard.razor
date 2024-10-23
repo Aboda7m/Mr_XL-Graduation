@@ -17,6 +17,11 @@
     <p>Implement other admin functionalities here.</p>
 </div>
 
+<!-- Logout Button -->
+<div style="text-align: center; margin-top: 20px;">
+    <button class="btn" @onclick="LogOut">Logout</button>
+</div>
+
 <style>
     h3 {
         text-align: center;
@@ -40,3 +45,12 @@
             transform: translateY(-2px);
         }
 </style>
+
+@code {
+    private void LogOut()
+    {
+        // This is where you would clear the authentication state if necessary
+        // Then redirect to the login page
+        NavigationManager.NavigateTo("/login");
+    }
+}

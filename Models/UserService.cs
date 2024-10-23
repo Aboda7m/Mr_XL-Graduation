@@ -75,6 +75,28 @@ namespace Mr_XL_Graduation.Services
             var user = new User(); // Use an empty user object for hashing
             return _passwordHasher.HashPassword(user, password);
         }
+
+        // Method to get all students asynchronously
+        public async Task<List<Student>> GetAllStudentsAsync()
+        {
+            return await _context.Students.ToListAsync();
+        }
+
+        // Method to update the balance of a student asynchronously
+        public async Task UpdateStudentBalanceAsync(string username, decimal newBalance)
+        {
+            var student = await _context.Students.SingleOrDefaultAsync(s => s.Username == username);
+            if (student != null)
+            {
+                student.Balance = newBalance;
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new Exception("Student not found.");
+            }
+        }
+
     }
 
     public class RegistrationResult
