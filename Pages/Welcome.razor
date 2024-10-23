@@ -1,6 +1,9 @@
 @page "/welcome/{username}"
 @inject Mr_XL_Graduation.Services.UserService UserService
 
+<!-- Link to the Welcome CSS file -->
+<link href="css/Welcome.css" rel="stylesheet" />
+
 <div class="dashboard">
     <h2>Welcome, @fullName!</h2>
 
@@ -22,12 +25,13 @@
             <h3>Student Info</h3>
             <p><strong>ID:</strong> @studentId</p>
             <p><strong>Email:</strong> @email</p>
+            <p><strong>Course:</strong> @course</p> <!-- Add Course Info -->
         </div>
 
         <!-- Balance Panel -->
         <div class="panel">
             <h3>Balance</h3>
-            <p>Your balance is: $0.00</p>
+            <p>Your balance is: @balance</p> <!-- Show actual balance -->
         </div>
 
         <!-- Payments and Bills Panel -->
@@ -36,6 +40,13 @@
             <p>No payments due at the moment.</p>
         </div>
     </div>
+
+    @if (true)
+    {
+        <div>
+            <NavLink class="btn" href="/admin/dashboard">Go to Admin Dashboard</NavLink>
+        </div>
+    }
 
     <button class="btn" @onclick="LogOut">Logout</button>
 </div>
@@ -47,6 +58,9 @@
     private string fullName { get; set; }
     private string studentId { get; set; }
     private string email { get; set; }
+    private string course { get; set; } // Add Course variable
+    private decimal balance { get; set; } // Variable for balance
+    private bool isAdmin { get; set; } // Variable to check if the user is admin
 
     [Inject]
     private NavigationManager NavigationManager { get; set; }
@@ -60,12 +74,18 @@
             fullName = studentInfo.FullName;
             studentId = studentInfo.StudentId;
             email = studentInfo.Email;
+            course = studentInfo.Course; // Get the course name
+            balance = studentInfo.Balance; // Get the actual balance
+            //isAdmin = studentInfo.IsAdmin; // Directly assign isAdmin from studentInfo
         }
         else
         {
             fullName = "Unknown User";
             studentId = "N/A";
             email = "N/A";
+            course = "N/A"; // Default value
+            balance = 0; // Default value
+            isAdmin = false; // Default value
         }
     }
 
@@ -74,69 +94,3 @@
         NavigationManager.NavigateTo("/login");
     }
 }
-
-<style>
-    body {
-        font-family: 'Arial', sans-serif;
-        background-color: #f4f7f9;
-        color: #333;
-        margin: 0;
-        padding: 20px;
-    }
-
-    .dashboard {
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-
-    h2 {
-        text-align: center;
-        color: #6f2c91; /* Purple accent */
-        margin-bottom: 20px;
-    }
-
-    .grid-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 20px;
-    }
-
-    .panel {
-        background-color: white;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-        .panel h3 {
-            color: #6f2c91; /* Purple accent */
-            margin-bottom: 10px;
-        }
-
-    .btn {
-        background-color: #6f2c91;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        padding: 10px 20px;
-        font-size: 1em;
-        cursor: pointer;
-        transition: background-color 0.3s, transform 0.3s;
-        margin-top: 30px;
-        display: block;
-        width: 100px;
-        text-align: center;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-        .btn:hover {
-            background-color: #5a2475;
-            transform: translateY(-2px);
-        }
-
-        .btn:active {
-            background-color: #4a1d61;
-            transform: translateY(0);
-        }
-</style>

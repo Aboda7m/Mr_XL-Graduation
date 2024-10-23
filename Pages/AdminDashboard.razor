@@ -1,0 +1,42 @@
+﻿@page "/admin/dashboard"
+@inject Mr_XL_Graduation.Services.UserService UserService
+@inject NavigationManager NavigationManager
+@using Microsoft.AspNetCore.Authorization // Add this
+@attribute [Authorize(Roles = "Admin")]
+
+<h3>Admin Dashboard</h3>
+
+<div>
+    <h4>Student Balance Management</h4>
+    <p>Manage student balances from here.</p>
+    <NavLink class="btn" href="/admin/balance-management">Go to Balance Management</NavLink>
+</div>
+
+<div>
+    <h4>Other Admin Functions</h4>
+    <p>Implement other admin functionalities here.</p>
+</div>
+
+<style>
+    h3 {
+        text-align: center;
+        color: #6f2c91; /* Purple accent */
+    }
+
+    .btn {
+        background-color: #6f2c91;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 1em;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+        margin-top: 20px;
+    }
+
+        .btn:hover {
+            background-color: #5a2475;
+            transform: translateY(-2px);
+        }
+</style>

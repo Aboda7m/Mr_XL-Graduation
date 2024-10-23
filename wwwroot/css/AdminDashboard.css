@@ -1,0 +1,21 @@
+h3 {
+    text-align: center;
+    color: #6f2c91; /* Purple accent */
+}
+
+.btn {
+    background-color: #6f2c91;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    margin-top: 20px;
+}
+
+    .btn:hover {
+        background-color: #5a2475;
+        transform: translateY(-2px);
+    }
