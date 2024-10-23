@@ -33,12 +33,12 @@ namespace Mr_XL_Graduation.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Username", "AdminId", "Discriminator", "IsAdmin", "Password" },
-                values: new object[] { "Admin", "1999000001", "Admin", true, "AQAAAAIAAYagAAAAEArwNtgxhOuMd8+jFurQb1fODJRe2PS6w09B2nsgtexlU62p5RfIvuxkCVFGFqLfNg==" });
+                values: new object[] { "Admin", "1999000001", "Admin", true, "AQAAAAIAAYagAAAAEC6SeQu03ppZboEX3Z0rVE5WoEVyISvcGglV0ThEvDmtSkoEnyU9RZmNu40sMgqQ9w==" });
 
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Username", "Balance", "Course", "Discriminator", "Email", "FullName", "IsAdmin", "Password", "StudentId" },
-                values: new object[] { "Mr_xl", 0m, "Computer Science", "Student", "mr_XL@example.com", "Abdulrahman Alkayail", false, "AQAAAAIAAYagAAAAEP1qFMKAvnjdbD+BzPNlFRXf42PO38gbCmsO99yQwEjurvTlGyorI6yBbTKti5uu7w==", "0000000000" });
+                values: new object[] { "Mr_xl", 0m, "Computer Science", "Student", "mr_XL@example.com", "Abdulrahman Alkayail", false, "AQAAAAIAAYagAAAAEBZxK3DhhS40+3Ja746AT2CRCld3Sb6Xb/k2Aojban+8PvjHPgVH58K0PpTNmiFoBg==", "0000000000" });
         }
 
         /// <inheritdoc />

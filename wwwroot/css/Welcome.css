@@ -7,14 +7,44 @@ body {
     padding: 20px;
 }
 
+.header {
+    background-color: #ffffff; /* White background for the header */
+    padding: 10px 20px; /* Add horizontal padding to the header */
+    display: flex; /* Use flexbox for alignment */
+    align-items: center; /* Center align items vertically */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Slight shadow for header */
+}
+
+.university-logo {
+    max-width: 150px; /* Limit width of the logo */
+    height: auto; /* Maintain aspect ratio */
+    margin-right: auto; /* Push logo to the left */
+}
+
+.nav-links {
+    display: flex; /* Align links horizontally */
+    gap: 15px; /* Space between links */
+}
+
+.nav-link {
+    text-decoration: none; /* Remove underline */
+    color: #007bff; /* Link color */
+    font-weight: bold; /* Make link text bold */
+    transition: color 0.3s; /* Smooth color transition */
+}
+
+    .nav-link:hover {
+        color: #0056b3; /* Darker blue on hover */
+    }
+
 .dashboard {
     max-width: 1200px;
-    margin: 0 auto;
+    margin: 20px auto 0; /* Add space above the dashboard */
 }
 
 h2 {
     text-align: center;
-    color: #6f2c91; /* Purple accent */
+    color: #007bff; /* Blue accent */
     margin-bottom: 20px;
 }
 
@@ -32,12 +62,20 @@ h2 {
 }
 
     .panel h3 {
-        color: #6f2c91; /* Purple accent */
+        color: #007bff; /* Blue accent */
         margin-bottom: 10px;
     }
 
+.plan-image {
+    max-width: 100%; /* Limit the maximum width to 100% of its container */
+    max-height: 200px; /* Set a maximum height */
+    height: auto; /* Maintain aspect ratio */
+    display: block; /* Center the image block */
+    margin: 0 auto; /* Center the image */
+}
+
 .btn {
-    background-color: #6f2c91;
+    background-color: #007bff; /* Blue button */
     color: white;
     border: none;
     border-radius: 5px;
@@ -54,11 +92,11 @@ h2 {
 }
 
     .btn:hover {
-        background-color: #5a2475;
+        background-color: #0056b3; /* Darker blue on hover */
         transform: translateY(-2px);
     }
 
     .btn:active {
-        background-color: #4a1d61;
+        background-color: #004085; /* Even darker blue on active */
         transform: translateY(0);
     }

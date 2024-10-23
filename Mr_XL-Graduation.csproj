@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <None Remove="Models\NewFile.txt" />
+    <None Remove="Pages\NewFile.txt" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,6 +24,15 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\css\images\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\css\images\plan.jpg" />
+    <None Include="wwwroot\css\images\ubt.jpg" />
   </ItemGroup>
 
 </Project>

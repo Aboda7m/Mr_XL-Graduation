@@ -62,7 +62,7 @@ namespace Mr_XL_Graduation.Migrations
                         {
                             Username = "Admin",
                             IsAdmin = true,
-                            Password = "AQAAAAIAAYagAAAAEArwNtgxhOuMd8+jFurQb1fODJRe2PS6w09B2nsgtexlU62p5RfIvuxkCVFGFqLfNg==",
+                            Password = "AQAAAAIAAYagAAAAEC6SeQu03ppZboEX3Z0rVE5WoEVyISvcGglV0ThEvDmtSkoEnyU9RZmNu40sMgqQ9w==",
                             AdminId = "1999000001"
                         });
                 });
@@ -97,7 +97,7 @@ namespace Mr_XL_Graduation.Migrations
                         {
                             Username = "Mr_xl",
                             IsAdmin = false,
-                            Password = "AQAAAAIAAYagAAAAEP1qFMKAvnjdbD+BzPNlFRXf42PO38gbCmsO99yQwEjurvTlGyorI6yBbTKti5uu7w==",
+                            Password = "AQAAAAIAAYagAAAAEBZxK3DhhS40+3Ja746AT2CRCld3Sb6Xb/k2Aojban+8PvjHPgVH58K0PpTNmiFoBg==",
                             Balance = 0m,
                             Course = "Computer Science",
                             Email = "mr_XL@example.com",

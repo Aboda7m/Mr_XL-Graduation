@@ -1,8 +1,18 @@
-@page "/welcome/{username}"
+a@page "/welcome/{username}"
 @inject Mr_XL_Graduation.Services.UserService UserService
 @inject NavigationManager NavigationManager
 
 <link href="css/Welcome.css" rel="stylesheet" />
+
+<div class="header">
+    <img src="/css/images/ubt.jpg" alt="Header image for UBT" /> <!-- Header image for UBT -->
+    <nav class="nav-links">
+        <a href="/schedule" class="nav-link">Schedule</a>
+        <a href="/grades" class="nav-link">Grades</a>
+        <a href="/student-info" class="nav-link">Student Info</a>
+        <a href="/payments" class="nav-link">Payments</a>
+    </nav>
+</div>
 
 <div class="dashboard">
     <h2>Welcome, @fullName!</h2>
@@ -29,6 +39,11 @@
         <div class="panel">
             <h3>Payments and Bills</h3>
             <p>No payments due at the moment.</p>
+        </div>
+        <div class="panel">
+            <h3>Student Plan</h3>
+            <img src="/css/images/plan.jpg" alt="Student Plan" class="plan-image" /> <!-- Plan image with class -->
+            <p>This section will display your academic plan.</p>
         </div>
     </div>
 
