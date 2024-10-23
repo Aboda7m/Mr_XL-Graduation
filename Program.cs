@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore; // Add this for Entity Framework Core
 using Mr_XL_Graduation.Services; // Ensure this using directive is present
 using Mr_XL_Graduation.Data; // Add this for your Data (DbContext)
+using Microsoft.AspNetCore.Http; // Add this for IHttpContextAccessor
 
 // Create the WebApplicationBuilder instance
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<UserService>(); // Change from Singleton to Scoped
+
+// Register IHttpContextAccessor
+builder.Services.AddHttpContextAccessor(); // Add this line
 
 // Register the DbContext with SQL Server
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
