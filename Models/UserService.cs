@@ -70,8 +70,10 @@ namespace Mr_XL_Graduation.Services
 
         private string GenerateStudentId()
         {
-            var currentYear = DateTime.Now.Year.ToString();
-            // Get the highest increment for the current year
+            // Get the current year in 4 digits
+            string currentYear = DateTime.Now.Year.ToString();
+
+            // Get the highest student ID for the current year
             var lastStudentId = _context.Students
                 .Where(s => s.StudentId.StartsWith(currentYear))
                 .Select(s => s.StudentId)
@@ -82,16 +84,15 @@ namespace Mr_XL_Graduation.Services
             int nextIncrement = 1; // Start at 1 if there are no existing IDs
             if (lastStudentId != null)
             {
-                // Assuming the format is YYYY 0000 XX
-                var parts = lastStudentId.Split(' ');
-                if (parts.Length == 2 && int.TryParse(parts[1], out int lastIncrement))
+                // Extract the last 6 digits and increment
+                if (int.TryParse(lastStudentId.Substring(4), out int lastIncrement))
                 {
                     nextIncrement = lastIncrement + 1; // Increment the last ID
                 }
             }
 
-            // Format the new student ID
-            return $"{currentYear} {nextIncrement:D4}";
+            // Format the new student ID as YYYYXXXXXX (10 digits total)
+            return $"{currentYear}{nextIncrement:D6}"; // Generates ID in the format YYYYXXXXXX
         }
     }
 }
