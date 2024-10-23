@@ -18,7 +18,7 @@
 
     <div class="container">
         <label for="userType"><b>User Type</b></label>
-        <select @bind="UserType">
+        <select @bind="UserType" required>
             <option value="Student">Student</option>
             <option value="Admin">Admin</option>
         </select>
@@ -36,10 +36,8 @@
     </div>
 
     <div class="container" style="background-color:#f1f1f1">
-        <button type="button" class="cancelbtn">Cancel</button>
+        <button type="button" class="cancelbtn" @onclick="CancelLogin">Cancel</button>
         <span class="psw">Forgot <a href="#">password?</a></span>
-        <br />
-        <!-- Registration Button -->
         <button type="button" @onclick="GoToRegister">Register as New Student</button>
     </div>
 </form>
@@ -109,33 +107,32 @@
     private string ErrorMessage { get; set; }
     private string UserType { get; set; } = "Student"; // Default user type
 
-    private void HandleLogin()
+    private async Task HandleLogin()
     {
-        // Clear previous error message
-        ErrorMessage = null;
+        ErrorMessage = null; // Clear previous error messages
 
-        // Validate user credentials based on selected user type
-        if (UserService.ValidateUser(Username, Password, out bool isAdmin))
+        try
         {
-            // Redirect based on user type
-            if (UserType == "Admin" && isAdmin)
+            var user = await UserService.ValidateUserAsync(Username, Password, UserType);
+            if (user != null)
             {
-                NavigationManager.NavigateTo("/admin/dashboard"); // Admin dashboard URL
-            }
-            else if (UserType == "Student" && !isAdmin)
-            {
-                NavigationManager.NavigateTo($"/welcome/{Username}"); // Student welcome page
+                string redirectUrl = user.IsAdmin ? "/admin/dashboard" : $"/welcome/{Username}";
+                NavigationManager.NavigateTo(redirectUrl);
             }
             else
             {
-                ErrorMessage = "Invalid user type or credentials.";
+                ErrorMessage = "Invalid username or password.";
             }
         }
-        else
+        catch (Exception ex)
         {
-            // Set error message for invalid credentials
-            ErrorMessage = "Invalid username or password.";
+            ErrorMessage = $"An error occurred: {ex.Message}";
         }
+    }
+
+    private void CancelLogin()
+    {
+        NavigationManager.NavigateTo("/home"); // Assuming there's a home page
     }
 
     private void GoToRegister()

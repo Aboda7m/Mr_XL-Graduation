@@ -1,40 +1,31 @@
 @page "/welcome/{username}"
 @inject Mr_XL_Graduation.Services.UserService UserService
+@inject NavigationManager NavigationManager
 
-<!-- Link to the Welcome CSS file -->
 <link href="css/Welcome.css" rel="stylesheet" />
 
 <div class="dashboard">
     <h2>Welcome, @fullName!</h2>
 
     <div class="grid-container">
-        <!-- Schedule Panel -->
         <div class="panel">
             <h3>Schedule</h3>
             <p>No schedule available yet.</p>
         </div>
-
-        <!-- Grades Panel -->
         <div class="panel">
             <h3>Grades</h3>
             <p>No grades available yet.</p>
         </div>
-
-        <!-- Student Info Panel -->
         <div class="panel">
             <h3>Student Info</h3>
             <p><strong>ID:</strong> @studentId</p>
             <p><strong>Email:</strong> @email</p>
             <p><strong>Course:</strong> @course</p>
         </div>
-
-        <!-- Balance Panel -->
         <div class="panel">
             <h3>Balance</h3>
             <p>Your balance is: @balance</p>
         </div>
-
-        <!-- Payments and Bills Panel -->
         <div class="panel">
             <h3>Payments and Bills</h3>
             <p>No payments due at the moment.</p>
@@ -54,13 +45,9 @@
     private string course { get; set; }
     private decimal balance { get; set; }
 
-    [Inject]
-    private NavigationManager NavigationManager { get; set; }
-
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        // Get student info based on the username directly
-        var studentInfo = UserService.GetStudent(username);
+        var studentInfo = await UserService.GetStudentAsync(username);
         if (studentInfo != null)
         {
             fullName = studentInfo.FullName;
