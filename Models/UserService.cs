@@ -3,6 +3,7 @@ using Mr_XL_Graduation.Data;
 using Mr_XL_Graduation.Models;
 using System;
 using System.Linq;
+using System.Diagnostics; // Import for debugging
 
 namespace Mr_XL_Graduation.Services
 {
@@ -37,14 +38,18 @@ namespace Mr_XL_Graduation.Services
         // New method for registering a user
         public (bool IsSuccess, string ErrorMessage) RegisterUser(string fullName, string email, string username, string password)
         {
+            Debug.WriteLine("Starting user registration...");
+
             // Check if the username already exists
             if (_context.Users.Any(u => u.Username == username))
             {
+                Debug.WriteLine($"Registration failed: Username '{username}' already exists.");
                 return (false, "This username is already taken.");
             }
 
             // Generate new StudentId
             string studentId = GenerateStudentId();
+            Debug.WriteLine($"Generated StudentId: {studentId}");
 
             // Create a new User object
             var passwordHasher = new PasswordHasher<User>();
@@ -52,8 +57,10 @@ namespace Mr_XL_Graduation.Services
             {
                 Username = username,
                 Password = passwordHasher.HashPassword(new User(), password), // Hash the password
-                StudentId = studentId
+                StudentId = studentId,
+                IsAdmin = false // Default value for IsAdmin, assuming new users are not admins
             };
+            Debug.WriteLine($"New User created: Username = {newUser.Username}, StudentId = {newUser.StudentId}");
 
             // Create a new Student object
             var newStudent = new Student
@@ -61,21 +68,35 @@ namespace Mr_XL_Graduation.Services
                 StudentId = studentId,
                 FullName = fullName,
                 Email = email,
-                Balance = 0 // Default balance can be set to 0 or any initial value
+                Balance = 0, // Initialize Balance to 0
+                Course = "Computer Science" // Set default Course
             };
+            Debug.WriteLine($"New Student created: FullName = {newStudent.FullName}, Email = {newStudent.Email}, Course = {newStudent.Course}");
 
-            // Add the new user to the context
-            _context.Users.Add(newUser);
-            _context.Students.Add(newStudent);
-            _context.SaveChanges(); // Save changes to the database
+            try
+            {
+                // Add the new user and student to the context
+                _context.Users.Add(newUser);
+                _context.Students.Add(newStudent);
+                Debug.WriteLine("Attempting to save changes to the database...");
+                _context.SaveChanges(); // Save changes to the database
+                Debug.WriteLine("User registration successful.");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error during registration: {ex.Message}");
+                return (false, "An error occurred during registration. Please try again later.");
+            }
 
             return (true, string.Empty);
         }
 
+
         private string GenerateStudentId()
         {
-            // Get the current year in 4 digits
-            string currentYear = DateTime.Now.Year.ToString();
+            // Hardcoding the year to 2024
+            string currentYear = "2024";
+            Debug.WriteLine($"Generating Student ID for the year: {currentYear}");
 
             // Get the highest student ID for the current year
             var lastStudentId = _context.Students
@@ -84,19 +105,42 @@ namespace Mr_XL_Graduation.Services
                 .OrderByDescending(id => id)
                 .FirstOrDefault();
 
+            // Log the last student ID found (if any)
+            if (lastStudentId != null)
+            {
+                Debug.WriteLine($"Last Student ID found: {lastStudentId}");
+            }
+            else
+            {
+                Debug.WriteLine("No existing Student IDs found for the current year.");
+            }
+
             // Extract the increment part and increment it
-            int nextIncrement = 1; // Start at 1 if there are no existing IDs
+            int nextIncrement = 1; // Default to 1 if there are no existing IDs
             if (lastStudentId != null)
             {
                 // Extract the last 6 digits and increment
+                Debug.WriteLine($"Attempting to parse increment from last Student ID: {lastStudentId}");
+
                 if (int.TryParse(lastStudentId.Substring(4), out int lastIncrement))
                 {
                     nextIncrement = lastIncrement + 1; // Increment the last ID
+                    Debug.WriteLine($"Parsed last increment: {lastIncrement}. Next increment will be: {nextIncrement}");
+                }
+                else
+                {
+                    // Handle the case where parsing fails
+                    Debug.WriteLine("Failed to parse increment from last Student ID. Resetting next increment to 1.");
+                    nextIncrement = 1;
                 }
             }
 
             // Format the new student ID as YYYYXXXXXX (10 digits total)
-            return $"{currentYear}{nextIncrement:D6}"; // Generates ID in the format YYYYXXXXXX
+            string newStudentId = $"{currentYear}{nextIncrement:D6}"; // Generates ID in the format YYYYXXXXXX
+            Debug.WriteLine($"Generated new Student ID: {newStudentId}");
+
+            return newStudentId;
         }
+
     }
 }
