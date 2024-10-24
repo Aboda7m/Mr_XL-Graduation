@@ -1,4 +1,4 @@
-a@page "/welcome/{username}"
+@page "/welcome/{username}"
 @inject Mr_XL_Graduation.Services.UserService UserService
 @inject NavigationManager NavigationManager
 
@@ -11,6 +11,7 @@ a@page "/welcome/{username}"
         <a href="/grades" class="nav-link">Grades</a>
         <a href="/student-info" class="nav-link">Student Info</a>
         <a href="/payments" class="nav-link">Payments</a>
+        <a href="/student-plan/@username" class="nav-link">Student Plan</a> <!-- Updated link to Student Plan -->
     </nav>
 </div>
 
@@ -42,7 +43,7 @@ a@page "/welcome/{username}"
         </div>
         <div class="panel">
             <h3>Student Plan</h3>
-            <img src="/css/images/plan.jpg" alt="Student Plan" class="plan-image" /> <!-- Plan image with class -->
+            <img src="/css/images/plan.jpg" alt="Student Plan" class="plan-image" @onclick="GoToStudentPlan" style="cursor:pointer;" /> <!-- Clickable plan image -->
             <p>This section will display your academic plan.</p>
         </div>
     </div>
@@ -84,5 +85,10 @@ a@page "/welcome/{username}"
     private void LogOut()
     {
         NavigationManager.NavigateTo("/login");
+    }
+
+    private void GoToStudentPlan()
+    {
+        NavigationManager.NavigateTo($"/student-plan/{username}"); // Correctly pass the username
     }
 }

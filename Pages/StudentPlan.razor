@@ -1,1 +1,50 @@
-﻿
+﻿@page "/student-plan/{username}"
+@inject NavigationManager NavigationManager
+
+<div class="student-plan-container">
+    <h3>@username's Student Plan</h3> <!-- Displaying the personalized message -->
+    <img src="/css/images/plan.jpg" alt="Student Plan" class="enlarged-image" /> <!-- Displaying the enlarged plan image -->
+    <button class="btn" @onclick="BackToWelcome">Back to Welcome Page</button>
+</div>
+
+<style>
+    .student-plan-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Center the content */
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .enlarged-image {
+        max-width: 90%; /* Make the image responsive */
+        height: auto; /* Maintain aspect ratio */
+        border: 1px solid #ccc; /* Optional: border for the image */
+        margin: 20px 0; /* Spacing above and below the image */
+    }
+
+    .btn {
+        background-color: #04AA6D;
+        color: #ffffff;
+        padding: 10px 15px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+        .btn:hover {
+            opacity: 0.8;
+        }
+</style>
+
+@code {
+    [Parameter]
+    public string username { get; set; }  // Parameter to hold the username
+
+    private void BackToWelcome()
+    {
+        NavigationManager.NavigateTo($"/welcome/{username}");  // Navigate back with username
+    }
+}
