@@ -1,0 +1,47 @@
+﻿@page "/grades/{username}"
+
+<link href="css/Grades.css" rel="stylesheet" />
+
+<div class="grades-page">
+    <h2>@username's Grades</h2>
+
+    <table class="grades-table">
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Grade</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Quran</td>
+                <td>A+</td>
+            </tr>
+            <tr>
+                <td>Computer Science</td>
+                <td>A+</td>
+            </tr>
+            <tr>
+                <td>Java Programming</td>
+                <td>A+</td>
+            </tr>
+            <tr>
+                <td>Mathematics</td>
+                <td>D+</td>
+            </tr>
+            <tr>
+                <td>History</td>
+                <td>B</td>
+            </tr>
+            <tr>
+                <td>Physics</td>
+                <td>C+</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+@code {
+    [Parameter]
+    public string username { get; set; }
+}
