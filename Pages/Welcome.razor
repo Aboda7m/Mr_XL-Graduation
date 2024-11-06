@@ -7,7 +7,8 @@
 <div class="header">
     <img src="/css/images/ubt.jpg" alt="Header image for UBT" /> <!-- Header image for UBT -->
     <nav class="nav-links">
-        <a href="/schedule" class="nav-link">Schedule</a>
+        <!-- Update the Schedule link to include the username -->
+        <a href="/schedule/@username" class="nav-link">Schedule</a> <!-- Added username here -->
         <a href="/grades" class="nav-link">Grades</a>
         <a href="/student-info" class="nav-link">Student Info</a>
         <a href="/payments" class="nav-link">Payments</a>
@@ -21,7 +22,8 @@
     <div class="grid-container">
         <div class="panel">
             <h3>Schedule</h3>
-            <p>No schedule available yet.</p>
+            <!-- Provide a dynamic link to the user's schedule -->
+            <p><a href="/schedule/@username">Click here to view your schedule</a></p> <!-- Add this link -->
         </div>
         <div class="panel">
             <h3>Grades</h3>
