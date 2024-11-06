@@ -27,6 +27,9 @@ namespace Mr_XL_Graduation.Models
         public decimal Balance { get; set; }
 
         public string Course { get; set; }
+
+        // New property to store total outstanding bills
+        public decimal Bills { get; set; }
     }
 
     public class Admin : User
