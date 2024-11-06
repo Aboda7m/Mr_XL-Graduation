@@ -67,10 +67,11 @@ h2 {
     }
 
 /* Container for the Schedule Image */
+/* Container for the Schedule Image */
 .schedule-container {
-    width: 100%; /* Ensure the container takes up the full available width */
-    height: 200px; /* Set a fixed height */
-    overflow: hidden; /* Prevent image overflow */
+    width: 100%; /* Make the container responsive */
+    height: 300px; /* Set the height to a flexible value for better responsiveness */
+    overflow: hidden; /* Prevent overflow */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -79,12 +80,13 @@ h2 {
 
 /* Style for the Schedule Image */
 .schedule-placeholder {
-    width: 100%; /* Ensure the image fills the container width */
-    height: 100%; /* Ensure the image fills the container height */
-    object-fit: fill !important; /* Stretch the image to fill both width and height, without maintaining aspect ratio */
-    display: block; /* Make it a block element to avoid extra space */
-    cursor: pointer; /* Indicate the image is clickable */
+    width: 100%; /* Fill the container's width */
+    height: 100%; /* Ensure the image fills the height of the container */
+    object-fit: contain; /* Ensure the image scales without distortion */
+    display: block;
+    cursor: pointer; /* Indicate that the image is clickable */
 }
+
 
 /* Plan Image */
 .plan-container {

@@ -7,12 +7,11 @@
 <div class="header">
     <img src="/css/images/ubt.jpg" alt="Header image for UBT" /> <!-- Header image for UBT -->
     <nav class="nav-links">
-        <!-- Update the Schedule link to include the username -->
-        <a href="/schedule/@username" class="nav-link">Schedule</a> <!-- Added username here -->
+        <a href="/schedule/@username" class="nav-link">Schedule</a>
         <a href="/grades" class="nav-link">Grades</a>
         <a href="/student-info" class="nav-link">Student Info</a>
         <a href="/payments" class="nav-link">Payments</a>
-        <a href="/student-plan/@username" class="nav-link">Student Plan</a> <!-- Updated link to Student Plan -->
+        <a href="/student-plan/@username" class="nav-link">Student Plan</a>
     </nav>
 </div>
 
@@ -22,13 +21,12 @@
     <div class="grid-container">
         <div class="panel">
             <h3>Schedule</h3>
-            <!-- Schedule Placeholder Image as clickable link -->
             <a href="/schedule/@username">
                 <div class="schedule-container">
                     <img src="/css/images/Schedule.png" alt="Schedule Placeholder" class="schedule-placeholder" />
                 </div>
             </a>
-            <p><a href="/schedule/@username">Click here to view your schedule</a></p> <!-- Add this link -->
+            <p><a href="/schedule/@username">Click here to view your schedule</a></p>
         </div>
         <div class="panel">
             <h3>Grades</h3>
@@ -50,7 +48,7 @@
         </div>
         <div class="panel">
             <h3>Student Plan</h3>
-            <img src="/css/images/plan.jpg" alt="Student Plan" class="plan-image" @onclick="GoToStudentPlan" style="cursor:pointer;" /> <!-- Clickable plan image -->
+            <img src="/css/images/plan.jpg" alt="Student Plan" class="plan-image" @onclick="GoToStudentPlan" />
             <p>This section will display your academic plan.</p>
         </div>
     </div>
@@ -96,6 +94,6 @@
 
     private void GoToStudentPlan()
     {
-        NavigationManager.NavigateTo($"/student-plan/{username}"); // Correctly pass the username
+        NavigationManager.NavigateTo($"/student-plan/{username}");
     }
 }
