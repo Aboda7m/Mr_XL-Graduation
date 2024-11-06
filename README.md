@@ -37,26 +37,31 @@ To get started, clone the repository:
 ```bash
 git clone https://github.com/Aboda7m/Mr_XL-Graduation.git
 Install Dependencies
+```
 Navigate to the project directory and restore the required packages:
 
-bash
+```bash
 Copy code
 cd Mr_XL-Graduation
 dotnet restore
+```
 Set up Database
+
 Ensure your database is set up correctly:
 
 Configure your database connection in appsettings.json.
 Apply database migrations:
-bash
+```bash
 Copy code
 dotnet ef database update
+```
 Run the Application
 To run the application locally, execute the following command:
 
-bash
+```bash
 Copy code
 dotnet run
+```
 The application should now be accessible at https://localhost:5001 in your browser.
 
 Usage
