@@ -11,7 +11,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddScoped<UserService>(); // Change from Singleton to Scoped
+
+// Register your services here
+builder.Services.AddScoped<UserService>(); // Registering UserService as Scoped
+builder.Services.AddScoped<ScheduleService>(); // Register ScheduleService as Scoped
 
 // Register the DbContext with SQL Server
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
