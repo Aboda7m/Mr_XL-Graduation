@@ -1,0 +1,100 @@
+﻿@page "/admin/bills-management"
+@using Mr_XL_Graduation.Models
+@inject Mr_XL_Graduation.Services.UserService UserService
+@inject NavigationManager NavigationManager
+
+<h2 style="text-align:center">Manage Student Bills</h2>
+
+@if (!string.IsNullOrEmpty(SuccessMessage))
+{
+    <div style="color: green; text-align: center;">
+        @SuccessMessage
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div style="color: red; text-align: center;">
+        @ErrorMessage
+    </div>
+}
+
+<div class="container">
+    @if (students == null || !students.Any())
+    {
+        <p>No students found.</p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Student ID</th>
+                    <th>Course</th>
+                    <th>Bills</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var student in students)
+                {
+                    <tr>
+                        <td>@student.FullName</td>
+                        <td>@student.Email</td>
+                        <td>@student.StudentId</td>
+                        <td>@student.Course</td>
+                        <td>
+                            <input type="number" @bind="student.Bills" min="0" />
+                        </td>
+                        <td>
+                            <button @onclick="() => UpdateBills(student)">Update</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+<div style="text-align: center; margin-top: 20px;">
+    <button class="btn btn-secondary" @onclick="GoToDashboard">Back to Dashboard</button>
+</div>
+
+@code {
+    private List<Student> students;
+    private string SuccessMessage { get; set; }
+    private string ErrorMessage { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadStudents();
+    }
+
+    private async Task LoadStudents()
+    {
+        students = await UserService.GetAllStudentsAsync();
+    }
+
+    private async Task UpdateBills(Student student)
+    {
+        ErrorMessage = null;
+        SuccessMessage = null;
+
+        try
+        {
+            await UserService.UpdateStudentBillsAsync(student.Username, student.Bills);
+            SuccessMessage = "Bills updated successfully!";
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"An error occurred: {ex.Message}";
+        }
+    }
+
+    private void GoToDashboard()
+    {
+        NavigationManager.NavigateTo("/admin/dashboard");
+    }
+}

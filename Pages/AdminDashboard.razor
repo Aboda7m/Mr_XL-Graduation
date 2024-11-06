@@ -13,6 +13,12 @@
 </div>
 
 <div>
+    <h4>Student Bills Management</h4>
+    <p>Manage student bills from here.</p>
+    <NavLink class="btn" href="/admin/bills-management">Go to Bills Management</NavLink>
+</div>
+
+<div>
     <h4>Other Admin Functions</h4>
     <p>Implement other admin functionalities here.</p>
 </div>
@@ -48,9 +54,14 @@
 
 @code {
     private void LogOut()
+
     {
+
         // This is where you would clear the authentication state if necessary
+
         // Then redirect to the login page
+
         NavigationManager.NavigateTo("/login");
+
     }
 }
