@@ -111,6 +111,35 @@ namespace Mr_XL_Graduation.Services
             }
         }
 
+
+        public async Task PayBillsAsync(string username, decimal paymentAmount)
+        {
+            var student = await _context.Students.SingleOrDefaultAsync(s => s.Username == username);
+            if (student != null)
+            {
+                if (paymentAmount <= student.Balance)
+                {
+                    student.Balance -= paymentAmount;
+                    student.Bills -= paymentAmount;
+
+                    if (student.Bills < 0)
+                    {
+                        student.Bills = 0; // Ensure bills don't go below 0
+                    }
+
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    throw new Exception("Insufficient balance to pay the bills.");
+                }
+            }
+            else
+            {
+                throw new Exception("Student not found.");
+            }
+        }
+
     }
 
     public class RegistrationResult

@@ -12,6 +12,18 @@
         <h3>Current Bills: @bills</h3>
     </div>
 
+    <div class="payment-form">
+        <label for="paymentAmount">Enter Payment Amount:</label>
+        <input type="number" id="paymentAmount" @bind="paymentAmount" min="0" max="@balance" placeholder="Amount to pay" />
+
+        @if (!string.IsNullOrEmpty(paymentMessage))
+        {
+            <p>@paymentMessage</p>
+        }
+
+        <button class="btn" @onclick="PayBills">Pay Bills</button>
+    </div>
+
     <button class="btn" @onclick="GoBack">Go Back</button>
 </div>
 
@@ -21,6 +33,8 @@
 
     private decimal balance { get; set; }
     private decimal bills { get; set; }
+    private decimal paymentAmount { get; set; }
+    private string paymentMessage { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -34,6 +48,35 @@
         {
             balance = 0;
             bills = 0;
+        }
+    }
+
+    private async Task PayBills()
+    {
+        if (paymentAmount <= 0)
+        {
+            paymentMessage = "Please enter a valid amount.";
+            return;
+        }
+
+        if (paymentAmount > balance)
+        {
+            paymentMessage = "You do not have enough balance to make this payment.";
+            return;
+        }
+
+        try
+        {
+            await UserService.PayBillsAsync(username, paymentAmount);
+            paymentMessage = "Payment successful!";
+            // Update balance and bills after payment
+            balance -= paymentAmount;
+            bills -= paymentAmount;
+            if (bills < 0) bills = 0;
+        }
+        catch (Exception ex)
+        {
+            paymentMessage = $"Payment failed: {ex.Message}";
         }
     }
 
