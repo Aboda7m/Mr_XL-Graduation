@@ -66,24 +66,42 @@ h2 {
         margin-bottom: 10px;
     }
 
+/* Container for the Schedule Image */
+.schedule-container {
+    max-width: 300px; /* Limit container to the width of the panel */
+    max-height: 200px; /* Set a fixed maximum height */
+    overflow: hidden; /* Ensure the image doesn't overflow out of the box */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
 /* Style for the Schedule Image */
 .schedule-placeholder {
-    max-width: 100%; /* Ensure the image fits within the parent container */
-    max-height: 250px; /* Ensure the image has a reasonable maximum height */
-    height: auto; /* Maintain the aspect ratio */
-    width: auto; /* Ensure the width adjusts based on height */
+    width: 100%; /* Ensure the image fills the container width */
+    height: auto; /* Maintain aspect ratio */
+    max-height: 200px; /* Set a fixed height for the image */
     display: block; /* Ensure it's a block element for proper alignment */
-    margin: 0 auto; /* Center the image horizontally */
     cursor: pointer; /* Indicate the image is clickable */
 }
 
 /* Plan Image */
+.plan-container {
+    width: 300px; /* Set the container width in pixels */
+    height: 200px; /* Set the container height in pixels */
+    overflow: hidden; /* Prevent overflow */
+    margin: 0 auto; /* Center the container */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .plan-image {
-    max-width: 100%; /* Limit the maximum width to 100% of its container */
-    max-height: 200px; /* Set a maximum height */
+    width: 100%; /* The image will fill the width of its container */
     height: auto; /* Maintain aspect ratio */
-    display: block; /* Center the image block */
-    margin: 0 auto; /* Center the image */
+    display: block; /* Ensure it's a block element */
+    cursor: pointer; /* Indicate that the image is clickable */
 }
 
 .btn {
