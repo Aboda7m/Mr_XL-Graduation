@@ -27,10 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\css\images\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="wwwroot\css\images\plan.jpg" />
     <None Include="wwwroot\css\images\ubt.jpg" />
   </ItemGroup>
