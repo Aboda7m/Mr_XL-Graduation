@@ -1,0 +1,44 @@
+﻿@page "/payment/{username}"
+@inject Mr_XL_Graduation.Services.UserService UserService
+@inject NavigationManager NavigationManager
+
+<link href="css/Payment.css" rel="stylesheet" />
+
+<div class="payment-container">
+    <h2>Payment Details</h2>
+
+    <div class="payment-box">
+        <h3>Current Balance: @balance</h3>
+        <h3>Current Bills: @bills</h3>
+    </div>
+
+    <button class="btn" @onclick="GoBack">Go Back</button>
+</div>
+
+@code {
+    [Parameter]
+    public string username { get; set; }
+
+    private decimal balance { get; set; }
+    private decimal bills { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var studentInfo = await UserService.GetStudentAsync(username);
+        if (studentInfo != null)
+        {
+            balance = studentInfo.Balance;
+            bills = studentInfo.Bills;
+        }
+        else
+        {
+            balance = 0;
+            bills = 0;
+        }
+    }
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo($"/welcome/{username}");
+    }
+}
