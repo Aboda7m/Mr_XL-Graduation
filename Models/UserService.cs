@@ -97,6 +97,20 @@ namespace Mr_XL_Graduation.Services
             }
         }
 
+        public async Task UpdateStudentBillsAsync(string username, decimal newBillsAmount)
+        {
+            var student = await _context.Students.SingleOrDefaultAsync(s => s.Username == username);
+            if (student != null)
+            {
+                student.Bills = newBillsAmount;
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new Exception("Student not found.");
+            }
+        }
+
     }
 
     public class RegistrationResult

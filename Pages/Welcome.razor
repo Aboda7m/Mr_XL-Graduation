@@ -5,7 +5,7 @@
 <link href="css/Welcome.css" rel="stylesheet" />
 
 <div class="header">
-    <img src="/css/images/ubt.jpg" alt="Header image for UBT" /> <!-- Header image for UBT -->
+    <img src="/css/images/ubt.jpg" alt="Header image for UBT" />
     <nav class="nav-links">
         <a href="/schedule/@username" class="nav-link">Schedule</a>
         <a href="/grades" class="nav-link">Grades</a>
@@ -44,7 +44,7 @@
         </div>
         <div class="panel">
             <h3>Payments and Bills</h3>
-            <p>No payments due at the moment.</p>
+            <p>Your outstanding bills are: @bills</p> <!-- Display bills here -->
         </div>
         <div class="panel">
             <h3>Student Plan</h3>
@@ -65,6 +65,7 @@
     private string email { get; set; }
     private string course { get; set; }
     private decimal balance { get; set; }
+    private decimal bills { get; set; } // Add variable to hold the bills amount
 
     protected override async Task OnInitializedAsync()
     {
@@ -76,6 +77,7 @@
             email = studentInfo.Email;
             course = studentInfo.Course;
             balance = studentInfo.Balance;
+            bills = studentInfo.Bills; // Retrieve bills
         }
         else
         {
@@ -84,6 +86,7 @@
             email = "N/A";
             course = "N/A";
             balance = 0;
+            bills = 0;
         }
     }
 
