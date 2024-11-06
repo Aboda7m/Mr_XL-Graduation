@@ -105,7 +105,26 @@ h2 {
     display: block; /* Ensure it's a block element */
     cursor: pointer; /* Indicate that the image is clickable */
 }
+/* Container for the Grades Image */
+.grades-container {
+    width: 100%; /* Make the container responsive */
+    height: 200px; /* Set a flexible height for the container */
+    overflow: hidden; /* Prevent overflow */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
 
+/* Style for the Grades Image */
+.grades-image {
+    width: 100%; /* Fill the container's width */
+    height: 100%; /* Ensure the image fills the height of the container */
+    object-fit: cover; /* Ensure the image scales without distortion and covers the container */
+    object-position: center; /* Center the image inside the container */
+    display: block;
+    cursor: pointer; /* Indicate that the image is clickable */
+}
 .btn {
     background-color: #007bff; /* Blue button */
     color: white;
