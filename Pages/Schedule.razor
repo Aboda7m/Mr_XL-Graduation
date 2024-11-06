@@ -1,0 +1,60 @@
+﻿@page "/schedule/{username}"
+@inject Mr_XL_Graduation.Services.ScheduleService ScheduleService
+
+<link href="css/Schedule.css" rel="stylesheet" />
+
+<div class="schedule-page">
+    <h2>@username's Weekly Schedule</h2>
+
+    @if (scheduleItems != null && scheduleItems.Any())
+    {
+        <table class="schedule-table">
+            <thead>
+                <tr>
+                    <th>Time Slot</th>
+                    @foreach (var day in DaysOfWeek)
+                    {
+                        <th>@day</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var timeSlot in TimeSlots)
+                {
+                    <tr>
+                        <td>@timeSlot</td>
+                        @foreach (var day in DaysOfWeek)
+                        {
+                            <td>@GetScheduleItem(day, timeSlot)</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No schedule available yet.</p>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string username { get; set; }
+
+    private List<ScheduleItem> scheduleItems;
+    private string[] DaysOfWeek = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" };
+    private string[] TimeSlots = { "08:00 AM - 09:00 AM", "09:00 AM - 10:00 AM", "10:00 AM - 11:00 AM", "11:00 AM - 12:00 PM", "01:00 PM - 02:00 PM", "02:00 PM - 03:00 PM", "03:00 PM - 04:00 PM" };
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Fetch the user's schedule based on username
+        scheduleItems = await ScheduleService.GetWeeklyScheduleAsync(username);
+    }
+
+    private string GetScheduleItem(string day, string timeSlot)
+    {
+        var item = scheduleItems?.FirstOrDefault(s => s.DayOfWeek == day && s.TimeSlot == timeSlot);
+        return item != null ? $"{item.Subject} ({item.Room})" : "—";
+    }
+}
