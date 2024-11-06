@@ -66,6 +66,18 @@ h2 {
         margin-bottom: 10px;
     }
 
+/* Style for the Schedule Image */
+.schedule-placeholder {
+    max-width: 100%; /* Ensure the image fits within the parent container */
+    max-height: 250px; /* Ensure the image has a reasonable maximum height */
+    height: auto; /* Maintain the aspect ratio */
+    width: auto; /* Ensure the width adjusts based on height */
+    display: block; /* Ensure it's a block element for proper alignment */
+    margin: 0 auto; /* Center the image horizontally */
+    cursor: pointer; /* Indicate the image is clickable */
+}
+
+/* Plan Image */
 .plan-image {
     max-width: 100%; /* Limit the maximum width to 100% of its container */
     max-height: 200px; /* Set a maximum height */
