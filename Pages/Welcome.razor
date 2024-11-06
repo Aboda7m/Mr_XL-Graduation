@@ -8,9 +8,9 @@
     <img src="/css/images/ubt.jpg" alt="Header image for UBT" />
     <nav class="nav-links">
         <a href="/schedule/@username" class="nav-link">Schedule</a>
-        <a href="/grades" class="nav-link">Grades</a>
-        <a href="/student-info" class="nav-link">Student Info</a>
-        <a href="/payments" class="nav-link">Payments</a>
+        <a href="/grades/@username" class="nav-link">Grades</a>
+        <a href="/student-info/@username" class="nav-link">Student Info</a>
+        <a href="/payments/@username" class="nav-link">Payments</a>
         <a href="/student-plan/@username" class="nav-link">Student Plan</a>
     </nav>
 </div>
@@ -30,12 +30,12 @@
         </div>
         <div class="panel">
             <h3>Grades</h3>
-            <a href="/grades/@username">
+            <a href="/grades">
                 <!-- Added link to Grades page -->
                 <div>
                     <img src="/css/images/Grade.png" alt="Grades" class="grades-image" />
                 </div>
-                <p><a href="/grades/@username">Click here to view your grades</a></p> <!-- Link to Grades page -->
+                <p><a href="/grades">Click here to view your grades</a></p> <!-- Link to Grades page -->
             </a>
         </div>
         <div class="panel">
@@ -43,6 +43,7 @@
             <p><strong>ID:</strong> @studentId</p>
             <p><strong>Email:</strong> @email</p>
             <p><strong>Course:</strong> @course</p>
+            <p><a href="/student-info">Click here to view your student info</a></p> <!-- Link to Student Info -->
         </div>
         <div class="panel">
             <h3>Balance</h3>
@@ -51,12 +52,13 @@
         <div class="panel">
             <h3>Payments and Bills</h3>
             <p>Your outstanding bills are: @bills</p> <!-- Display bills here -->
-            <a href="/payment/@username" class="nav-link">Payments</a>
+            <a href="/payments" class="nav-link">Payments</a> <!-- Link to Payments page -->
         </div>
         <div class="panel">
             <h3>Student Plan</h3>
             <img src="/css/images/plan.jpg" alt="Student Plan" class="plan-image" @onclick="GoToStudentPlan" />
             <p>This section will display your academic plan.</p>
+            <p><a href="/student-plan/@username">Click here to view your student plan</a></p> <!-- Link to Student Plan -->
         </div>
     </div>
 
